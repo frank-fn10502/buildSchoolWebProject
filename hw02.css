@@ -262,12 +262,18 @@ nav a{
 .mainSaleProduct .txt button{
     font-size: 12px;
     line-height: 40px;
+    cursor: pointer;
     padding: 0 35px;
     background-color: #ffe605;
     color: #000;
     border-radius: 5px;
     border: none;
     margin-top: 40px;
+    transition: .2s;
+}
+.mainSaleProduct .txt button:hover{
+    background-color: #000;
+    color: #fff;
 }
 .mainSaleProduct .pic{
     width: 70%;
@@ -289,6 +295,26 @@ nav a{
 .onSalePoduct .main{
     width: 40%;
     padding: 0 15px;
+    position: relative;
+}
+.onSalePoduct .main .txt{
+    position: absolute;
+    color: #fff;
+    bottom: 60px;
+    left: 50px;
+}
+.onSalePoduct .main h2{
+    color: #fff;
+    width: 450px;
+    font-size: 36px;
+    line-height: 42px;
+}
+.onSalePoduct .main a{
+    color: #fff;
+    font-size: 20px;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 20px;
 }
 .onSalePoduct .wrap .title{
     font-size: 24px;
