@@ -616,6 +616,27 @@ img{
     .header .menu a{
         margin: 0 18px;
     }
+    .description h1{
+        font-family: "Montserrat", Sans-serif;
+        font-size: 110px;
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 146px;
+    }
+    .description h2{
+        font-size: 30px;
+        font-weight: 400;
+        text-transform: uppercase;
+        line-height: 50px;
+    }
+    .description h3{
+        font-family: "Montserrat", Sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: uppercase;
+        line-height: 14px;
+        letter-spacing: 0.06px;
+    }
 
     .services{
         padding: 85px 0 70px;
