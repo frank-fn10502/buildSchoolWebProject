@@ -26,6 +26,9 @@ img{
     line-height: 24px;
     font-size: 16px;
     /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+
 }
 .contact .item{
     padding: 9px 0 5px 0px;
@@ -64,7 +67,16 @@ img{
     left: 0;
     right: 0;
     top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
+.banner .content:before{
+    content:'';
+    flex-grow: .5;
+    order: 1;
+}
+
 .header{
     display: flex;
     flex-wrap: wrap;
@@ -93,12 +105,12 @@ img{
 .description{
     text-align: center;
     position: relative;
+    color: #fff;
+    /* margin: auto; */
+    order: 2;
 }
 
-.description{
-    color: #fff;
-    margin-top: 50px;
-}
+
 .description a{
     padding: 10px;
     display: inline-block;
