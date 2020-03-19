@@ -48,8 +48,10 @@ img{
 
 .banner{
     position: relative;
+    overflow: hidden;
 }
-.banner>img{
+.banner >img{
+    object-fit:cover;
     min-height: 450px;
     filter: brightness(.5);
 }
@@ -124,7 +126,7 @@ img{
     line-height: 14px;
 }
 
-.services .title h1{
+.services .title h2{
     text-align: center;
     font-family: "Montserrat", Sans-serif;
     font-size: 30px;
@@ -135,7 +137,7 @@ img{
     margin-top: 60px;
     position: relative;
 }
-.services .title h1::before{
+.services .title h2::before{
     content: '';
     width: 66px;
     height: 2px;
@@ -149,6 +151,7 @@ img{
 .services .item-group{
     display: flex;
     flex-wrap: wrap;
+    /* justify-content: space-around; */
 }
 .services .item{
     padding: 15px;
@@ -267,7 +270,7 @@ img{
 .news{
     padding: 60px 0px;
 }
-.news .title h1{
+.news .title h2{
     font-family: "Montserrat", Sans-serif;
     font-size: 30px;
     font-weight: 700;
@@ -278,7 +281,7 @@ img{
     margin: 60px 0 50px;
     position: relative;
 }
-.news .title h1::before{
+.news .title h2::before{
     content:'';
     width: 66px;
     height: 2px;
