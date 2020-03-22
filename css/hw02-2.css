@@ -1,0 +1,35 @@
+a ,p{
+    font-family: Helvetica, Verdana, Arial, 微軟正黑體, "Microsoft JhengHei", "儷黑 Pro", "LiHei Pro", sans-serif;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    line-height: 80px;
+}
+a{
+    display: inline-block;
+}
+.header img{
+    vertical-align: middle;
+}
+.header ul{
+    display: flex;
+    justify-content: center;
+}
+.header nav li a{
+    padding: 0 20px;
+    text-decoration: none;
+    color: #333;
+}
+.header nav li+li::before{
+    content:'|';
+}
+.header .otherLink li{
+    padding: 0 5px;
+    margin-left: 10px;
+}
+.header .otherLink img{
+    height: 23px;
+}
