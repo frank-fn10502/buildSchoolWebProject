@@ -1,0 +1,11 @@
+var x = ['Taiwan', '台灣', 306, 5, 39];
+var y = ['China', '中國', 82149, 3308, 75898];
+var z = ['America', '美國', 142895, 2436, 2660];
+ 
+var Earth = [x  , y, z];
+ 
+function getCountry(name){
+    return Earth.filter(x => x.some(y => y == name)).reduce((pre ,now) => pre.concat(now));
+}
+
+console.log(getCountry('Taiwan'));  

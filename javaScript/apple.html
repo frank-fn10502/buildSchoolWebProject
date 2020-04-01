@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>fake apple store</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <style>
+        img {
+            width: 100%;
+            vertical-align: top;
+            display: block;
+        }
+        .main .pic img {
+            padding-top: 65px;
+            /* height: 556px;
+            width: auto; */
+        }
+        .main .content .item-group .item .title {
+            margin-top: 24px;
+        }
+        .main .content .item-group .item h2 {
+            font-size: 17px;
+            line-height: 1.23543;
+            font-weight: 600;
+        }
+
+        .main .content .item-group .item .col-6 {
+            margin-top: 11px;
+            padding: 0 7px;
+        }
+        .main .content .item-group .item button {
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #d6d6d6;
+            background-color: hsla(0, 0%, 100%, .8);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .main .content .item-group .item button:hover {
+            border: 2px solid #0070c9;
+            padding: 14px;
+        }
+
+        .main .content .item-group .item:first-child img {
+            width: 32px;
+            height: 32px;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-7 row justify-content-center no-gutters">
+                    <div class="pic">
+
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="content">
+                        <header>
+                            <h1>購買 iPad</h1>
+                            <p>購買 iPad 可享免額外付費運送服務。</p>
+                        </header>
+                        <div class="item-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        var products = {
+            ipad: {
+                product: {
+                    id: '#abc2020',
+                    name: 'ipad',
+                    basicProfit: 10_900,
+                    configuration: [
+                        {
+                            name: '外觀', attributes: [
+                                { product: 'imgs/2020_3_31/ipad1.png', img: 'imgs/2020_3_31/color1.png', dec: '太空灰', profit: 0 },
+                                { product: 'imgs/2020_3_31/ipad2.png', img: 'imgs/2020_3_31/color2.png', dec: '銀色', profit: 0 },
+                                { product: 'imgs/2020_3_31/ipad2.png', img: 'imgs/2020_3_31/color3.png', dec: '金色', profit: 0 }
+                            ]
+                        },
+                        {
+                            name: '儲存裝置', attributes: [
+                                { main: '32GB', dec: 'NT$10,900 起', profit: 0 },
+                                { main: '128GB', dec: 'NT$13,900 起', profit: 3000 },
+                            ]
+                        },
+                        {
+                            name: '外連線能力觀', attributes: [
+                                { main: 'WI-FI', dec: 'NT$13,900', profit: 0 },
+                                { main: 'Wi-Fi + 行動網路 ', dec: 'NT$18,400', profit: 4500 },
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        function createInner(container, attributes) {
+            let divItem = document.createElement('div');
+            divItem.className = 'button-group row no-gutters';
+            for (let itemGroup of attributes) {
+                let divButton = document.createElement('div');
+                divButton.className = 'col-6'
+                let btn = document.createElement('button');
+                btn.addEventListener('click' ,function(e){
+                    let group = document.querySelector('.main .content .item-group ');
+                    console.log(group);
+                    console.log(e);
+                });
+
+                for (let item in itemGroup) {
+                    if (item == 'product') {
+                        // let productImg = 
+                    }
+                    else if (item == 'img') {
+                        let img = document.createElement('img');
+                        img.src = itemGroup[item];
+                        btn.appendChild(img);
+                        btn.setAttribute('index', 'asfdasfd');
+                    }
+                    else if (item != 'profit') {
+                        let dec = document.createElement('p');
+                        dec.textContent = itemGroup[item];
+                        btn.appendChild(dec);
+                    }
+                }
+                divButton.appendChild(btn)
+                divItem.appendChild(divButton);
+            }
+            container.appendChild(divItem);
+        }
+        function createItem(configuration) {
+            for (let itemGroup of configuration) {
+                let divItem = null;
+                for (let item in itemGroup) {
+                    let obj = itemGroup[item];
+                    if (typeof obj != 'object') {
+                        divItem = document.createElement('div');
+                        divItem.className = 'item';
+
+                        let divHeader = document.createElement('div');
+                        divHeader.className = 'title';
+                        let title = document.createElement('h2');
+                        title.textContent = obj;
+                        divHeader.appendChild(title);
+                        divItem.appendChild(divHeader);
+                        document.querySelector('.container .content .item-group').appendChild(divItem);
+                    }
+                    else {
+                        createInner(divItem, obj);
+                    }
+                }
+            }
+        }
+        createItem(products.ipad.product.configuration);
+        var productImg = document.querySelector('.main .pic');
+        let img = document.createElement('img');
+        img.src = products.ipad.product.configuration[0].attributes[0].product;
+        productImg.appendChild(img);
+
+        
+        // function GetColor(el){
+        //     // console.log(el);
+        //     color = el.children[1].innerHTML;
+        //     // console.log(color);
+        // }
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
