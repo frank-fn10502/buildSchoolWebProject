@@ -13,7 +13,7 @@
     <title>猜數字</title>
     <link rel="stylesheet" href="css/reset.css">
     <script src="https://kit.fontawesome.com/95fe5e2d81.js" crossorigin="anonymous"></script>
-    
+
     <style>
         *,
         input {
@@ -75,20 +75,25 @@
             padding: 2px;
         }
 
-        .row>div:first-child {
-            text-align: center;
-            font-size: 40px;
+        .row>div:first-child{
+            display: flex;
             margin-bottom: 30px;
+            
         }
-
+        .row>div:first-child .title{
+        }
+        .row>div:first-child h1{
+            font-size: 40px;
+            font-weight: bold;
+        }
         .control-panel {
             display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
+            justify-content: flex-start;
+            margin-left: 50px;
         }
-
         .control-panel button {
             margin: 0 5px;
+            font-size: 12px;
         }
 
         .input-area input {
@@ -96,20 +101,22 @@
         }
 
         .button-group {
-            margin: 0 -3px;
             margin-top: 20px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
         }
-
+        .button-group > div{
+            padding: 3px;
+        }
         .button-group button {
-            width: 30%;
-            margin: 3px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
         }
 
 
-        .col-4:last-child .item-group {
+        div[class*='col-']:last-child .item-group {
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -147,15 +154,16 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <h1>猜 數 字</h1>
-            </div>
-            <div class="col-12">
+            <div class="col-12 col-md-10 offset-md-2">
+                <div class="title">
+                    <h1>猜 數 字</h1>
+                </div>
                 <div class="control-panel">
 
                 </div>
             </div>
-            <div class="col-4">
+
+            <div class="col-6 col-md-4">
                 <div class="item-group">
                     <div class="input-area">
 
@@ -165,7 +173,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-6 col-md-4">
                 <div class="item-group">
                     <div class="main-panel">
 

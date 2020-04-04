@@ -19,13 +19,14 @@ function startStatus() {
     model.guessNumberGame.guess = '';
     console.log(model.guessNumberGame.answer);
 
-    let gameArea = document.getElementsByClassName('col-4');
+    let gameArea = document.querySelectorAll('div[class*="col-"]:not(:first-child)');
     for(let item of gameArea)
     {
         item.classList.remove('init');
     }
     record_panel.innerHTML= '<ul></ul>';
     control_panel.children[0].className = '';
+    input_area.classList.remove('warning-toolTips');
 }
 function createRecord(result)
 {
@@ -82,7 +83,7 @@ function initView() {
     let starBtn = createButton('開始遊戲');
 
     /* after pseudo */
-    let gameArea = document.getElementsByClassName('col-4');
+    let gameArea = document.querySelectorAll('div[class*="col-"]:not(:first-child)');
     for(let item of gameArea)
     {
         item.classList.add('init');
@@ -127,7 +128,10 @@ function initView() {
     });
     buttonTextArray.forEach((item, index, array) => {
         let button = createButton(item);
-        button_group.appendChild(button);
+        let btnBox = document.createElement('div');
+        btnBox.classList.add('col-4');
+        btnBox.appendChild(button);
+        button_group.appendChild(btnBox);
 
         if (!isNaN(button.innerHTML)) {
             button.addEventListener('click', function () {
