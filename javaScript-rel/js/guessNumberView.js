@@ -66,7 +66,7 @@ function dislayHint(display) {
             split[0] = model.guessNumberGame.guess
         }
         else {
-            let gameArea = document.querySelectorAll('div[class*="col-"]:not(:first-child)')[0];
+            let controlArea = document.querySelectorAll('div[class*="col-"]:not(:first-child)')[0];
             controlArea.classList.add('init');
             control_panel.children[0].classList.add('btn');
             control_panel.children[0].classList.add('btn-primary');
