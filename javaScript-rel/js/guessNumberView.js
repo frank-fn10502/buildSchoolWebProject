@@ -151,6 +151,29 @@ function initView() {
             input.value = model.guessNumberGame.guess;
         });
     });
+
+    input.addEventListener('keyup',function(e){
+        console.log(e.key);
+        if(e.keyCode != 13)
+        {
+            if(isNaN(e.key) && e.keyCode != 8 && e.keyCode != 46)
+            {
+                input_area.classList.add('warning-toolTips');
+                input.value = input.value.replace(/\D/g,'');
+            }
+            else
+            {
+                model.guessNumberGame.guess = input.value;
+                input_area.classList.remove('warning-toolTips');
+            }    
+        }
+        else
+        {
+            dislayHint(answer);
+            model.guessNumberGame.guess = '';
+            input.value = model.guessNumberGame.guess;
+        }
+    });
 }
 
 export { initView };
