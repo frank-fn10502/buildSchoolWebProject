@@ -75,6 +75,7 @@ function dislayHint(display) {
         display.value = split.join(' ~ ');
     
         record_panel.appendChild(createRecord(result));
+        record_panel.scrollTop = record_panel.scrollHeight;
     }
 }
 
@@ -160,7 +161,8 @@ function initView() {
         console.log(e.key);
         if(e.keyCode != 13)
         {
-            if(isNaN(e.key) && e.keyCode != 8 && e.keyCode != 46)
+            if(isNaN(e.key) && e.keyCode != 8 && e.keyCode != 46 
+            && input.value.length > model.guessNumberGame.guess.length)
             {
                 input_area.classList.add('warning-toolTips');
                 input.value = input.value.replace(/\D/g,'');
