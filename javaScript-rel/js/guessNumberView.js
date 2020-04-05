@@ -95,6 +95,8 @@ function dislayHint(display) {
                 controlArea.classList.add('init');
                 control_panel.children[control_panel.children.length-1].classList.add('btn');
                 control_panel.children[control_panel.children.length-1].classList.add('btn-primary');
+                document.activeElement.blur();
+                input_area.classList.remove('warning-toolTips');
                 alert('you win');
             }
             display.value = split.join(' ~ ');
@@ -120,6 +122,8 @@ function dislayHint(display) {
                 controlArea.classList.add('init');
                 control_panel.children[control_panel.children.length-1].classList.add('btn');
                 control_panel.children[control_panel.children.length-1].classList.add('btn-primary');
+                document.activeElement.blur();
+                input_area.classList.remove('warning-toolTips');
                 alert('you win');
             }
 
@@ -251,8 +255,8 @@ function initView(selectModel ,needHint = true ,length = 100 ,noRepeat = false) 
             }
             else
             {
-                currentGame.guess = input.value;
                 input_area.classList.remove('warning-toolTips');
+                currentGame.guess = input.value;
             }    
         }
         else
