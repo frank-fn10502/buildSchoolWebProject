@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>ipad-table</title>
+
+    <script src="https://kit.fontawesome.com/95fe5e2d81.js" crossorigin="anonymous"></script>
+    <style>
+        table {
+            text-align: center;
+        }
+
+        .row table thead .sortable {
+            cursor: pointer;
+        }
+        .row table thead .sortable i{
+            display: inline;
+            margin-left: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
+    <script type="module">
+        import {ipads ,employees} from './js/ipad.js';
+
+        var desc = false ,currentKey = '';
+        let container = document.querySelector('.row');
+        let table = document.createElement('table');
+        let thead = document.createElement('thead');
+        let tbody = document.createElement('tbody');
+
+        function initTh(key)
+        {
+            let sortable = document.querySelectorAll('.sortable');
+            Array.from(sortable ,(x) => {
+                let nowKey = x.getAttribute('data-key');
+                if(nowKey != key)
+                {
+                    x.children[0].className = 'fas fa-sort';
+                }
+            });
+        }
+
+        function theadAdd(thead, contents, array = null) {
+            let tr = document.createElement('tr');
+            contents.forEach((item ,index) => {
+                let th = document.createElement('th');
+                th.setAttribute('data-key', item);
+                th.setAttribute('data-sort', 1);
+                th.innerHTML = item;
+                if(index < 3)
+                {
+                    th.innerHTML += '<i class="fas fa-sort"></i>';
+                    th.classList.add('sortable');
+
+                    th.addEventListener('click', (e) => {
+                        let key = e.target.getAttribute('data-key');
+                        if(currentKey != key)
+                        {   
+                            currentKey = key;
+                            desc = false;
+                        }
+
+                        tbody.innerHTML = '';
+                        array.sort((a, b) => {
+                            if (typeof a[key] == 'number')
+                                return a[key] - b[key];
+                            else if (a[key].includes('GB')) {
+                                return a[key].replace('GB', '') - b[key].replace('GB', '');
+                            }
+                            else {
+                                var nameA = a[key].toUpperCase();
+                                var nameB = b[key].toUpperCase();
+                                if (nameA < nameB) {
+                                    return -1;
+                                }
+                                if (nameA > nameB) {
+                                    return 1;
+                                }
+                                return 0;
+                            }
+                        });
+
+                        if (desc) {
+                            array.reverse();
+                            e.target.children[0].className = 'fas fa-sort-down';
+                        }
+                        else
+                        {
+                            e.target.children[0].className = 'fas fa-sort-up';
+                        }
+                        desc = !desc;
+                        initTh(key);
+
+                        array.forEach((item, index) => {
+                            tbodyAdd(tbody, Object.values(item));
+                        });
+                    });
+
+                }
+
+                
+                tr.appendChild(th);
+            });
+            thead.appendChild(tr);
+        }
+        function tbodyAdd(tbody, contents) {
+            let tr = document.createElement('tr');
+            contents.forEach((item) => {
+                let td = document.createElement('td');
+                td.innerHTML = item;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        }
+
+        function init(){
+            table.classList.add('table');
+            table.classList.add('table-bordered');
+
+            container.appendChild(table);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            
+            theadAdd(thead ,Object.keys(ipads[0]),ipads);
+            ipads.forEach((item ,index) => {
+                tbodyAdd(tbody ,Object.values(item));
+            }); 
+
+            // theadAdd(thead ,Object.keys(employees[0]) ,employees);
+            // employees.forEach((item ,index) => {
+            //     tbodyAdd(tbody ,Object.values(item));
+            // });  
+        }
+
+        window.onload = function () {
+            init();         
+        }
+
+
+    </script>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
