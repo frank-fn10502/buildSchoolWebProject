@@ -17,13 +17,18 @@
         table {
             text-align: center;
         }
-
         .row table thead .sortable {
             cursor: pointer;
         }
-        .row table thead .sortable i{
+
+        .row table thead .sortable i {
             display: inline;
             margin-left: 3px;
+        }
+        img{
+            width: 100%;
+            vertical-align: top;
+            max-width: 100px;
         }
     </style>
 </head>
@@ -31,115 +36,113 @@
 <body>
     <div class="container">
         <div class="row">
-            
+
         </div>
     </div>
+
     <script>
         // import {ipads ,employees} from './js/ipad.js';
         const ipads = [
-        {
-            "sku": "MW762",
-            "price": 10900,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 金色",
-            "picture": "ipad_gold.png"
-        },
-        {
-            "sku": "MW792",
-            "price": 13900,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 金色",
-            "picture": "ipad_gold.png"
-        },
-        {
-            "sku": "MW742",
-            "price": 10900,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 太空灰色",
-            "picture": "ipad_space.png"
-        },
-        {
-            "sku": "MW772",
-            "price": 13900,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 太空灰色",
-            "picture": "ipad_space.png"
-        },
-        {
-            "sku": "MW752",
-            "price": 10900,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 銀色",
-            "picture": "ipad_silver.png"
-        },
-        {
-            "sku": "MW782",
-            "price": 13900,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 銀色",
-            "picture": "ipad_silver.png"
-        },
-        {
-            "sku": "MW6D2",
-            "price": 15400,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 金色",
-            "picture": "ipad_gold.png"
-        },
-        {
-            "sku": "MW6G2",
-            "price": 18400,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 金色",
-            "picture": "ipad_gold.png"
-        },
-        {
-            "sku": "MW6A2",
-            "price": 15400,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 太空灰色",
-            "picture": "ipad_space.png"
-        },
-        {
-            "sku": "MW6E2",
-            "price": 18400,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 太空灰色",
-            "picture": "ipad_space.png"
-        },
-        {
-            "sku": "MW6C2",
-            "price": 15400,
-            "storage": "32GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 銀色",
-            "picture": "ipad_silver.png"
-        },
-        {
-            "sku": "MW6F2",
-            "price": 18400,
-            "storage": "128GB",
-            "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 銀色",
-            "picture": "ipad_silver.png"
-        }
-    ];
+            {
+                "sku": "MW762",
+                "price": 10900,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 金色",
+                "picture": "ipad_gold.png"
+            },
+            {
+                "sku": "MW792",
+                "price": 13900,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 金色",
+                "picture": "ipad_gold.png"
+            },
+            {
+                "sku": "MW742",
+                "price": 10900,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 太空灰色",
+                "picture": "ipad_space.png"
+            },
+            {
+                "sku": "MW772",
+                "price": 13900,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 太空灰色",
+                "picture": "ipad_space.png"
+            },
+            {
+                "sku": "MW752",
+                "price": 10900,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 32GB - 銀色",
+                "picture": "ipad_silver.png"
+            },
+            {
+                "sku": "MW782",
+                "price": 13900,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi 機型 128GB - 銀色",
+                "picture": "ipad_silver.png"
+            },
+            {
+                "sku": "MW6D2",
+                "price": 15400,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 金色",
+                "picture": "ipad_gold.png"
+            },
+            {
+                "sku": "MW6G2",
+                "price": 18400,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 金色",
+                "picture": "ipad_gold.png"
+            },
+            {
+                "sku": "MW6A2",
+                "price": 15400,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 太空灰色",
+                "picture": "ipad_space.png"
+            },
+            {
+                "sku": "MW6E2",
+                "price": 18400,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 太空灰色",
+                "picture": "ipad_space.png"
+            },
+            {
+                "sku": "MW6C2",
+                "price": 15400,
+                "storage": "32GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 32GB - 銀色",
+                "picture": "ipad_silver.png"
+            },
+            {
+                "sku": "MW6F2",
+                "price": 18400,
+                "storage": "128GB",
+                "description": "10.2 吋 iPad Wi-Fi + 行動網路機型 128GB - 銀色",
+                "picture": "ipad_silver.png"
+            }
+        ];
 
-        var desc = false ,currentKey = '';
+        var desc = false, currentKey = '';
         let container = document.querySelector('.row');
         let table = document.createElement('table');
         let thead = document.createElement('thead');
         let tbody = document.createElement('tbody');
 
-        function initTh(key ,name)
-        {
+        function initTh(key, name) {
             let sortable = document.querySelectorAll('.sortable');
-            Array.from(sortable ,(x) => {
+            Array.from(sortable, (x) => {
                 let nowKey = x.getAttribute('data-key');
-                if(nowKey != key)
-                {
+                if (nowKey != key) {
                     x.children[0].className = 'fas fa-sort';
                 }
-                else
-                {
+                else {
                     x.children[0].className = name;
                 }
             });
@@ -147,21 +150,19 @@
 
         function theadAdd(thead, contents, array = null) {
             let tr = document.createElement('tr');
-            contents.forEach((item ,index) => {
+            contents.forEach((item, index) => {
                 let th = document.createElement('th');
                 th.setAttribute('data-key', item);
                 th.setAttribute('data-sort', 1);
                 th.innerHTML = item;
 
-                if(index < 3)
-                {
+                if (index < 3) {
                     th.innerHTML += '<i class="fas fa-sort"></i>';
                     th.classList.add('sortable');
 
                     th.addEventListener('click', (e) => {
                         let key = e.target.getAttribute('data-key');
-                        if(currentKey != key)
-                        {   
+                        if (currentKey != key) {
                             currentKey = key;
                             desc = false;
                         }
@@ -173,7 +174,7 @@
                             else if (typeof a[key] == 'string' && a[key].includes('GB')) {
                                 return a[key].replace('GB', '') - b[key].replace('GB', '');
                             }
-                            else if(typeof a[key] == 'string'){
+                            else if (typeof a[key] == 'string') {
                                 var nameA = a[key].toUpperCase();
                                 var nameB = b[key].toUpperCase();
                                 if (nameA < nameB) {
@@ -188,14 +189,13 @@
 
                         if (desc) {
                             array.reverse();
-                            initTh(key ,'fas fa-sort-down');
+                            initTh(key, 'fas fa-sort-down');
                         }
-                        else
-                        {
-                            initTh(key ,'fas fa-sort-up');
+                        else {
+                            initTh(key, 'fas fa-sort-up');
                         }
                         desc = !desc;
-                        
+
 
                         array.forEach((item, index) => {
                             tbodyAdd(tbody, Object.values(item));
@@ -204,33 +204,34 @@
 
                 }
 
-                
+
                 tr.appendChild(th);
             });
             thead.appendChild(tr);
         }
         function tbodyAdd(tbody, contents) {
             let tr = document.createElement('tr');
-            contents.forEach((item) => {
+            contents.forEach((item ,index ,array) => {
                 let td = document.createElement('td');
-                td.innerHTML = item;
+                td.classList.add('align-middle');
+                td.innerHTML = (index == array.length - 1 ? `<img src="./imgs/apple_table/${item}">` : `${item}`);
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);
         }
 
-        function init(){
+        function init() {
             table.classList.add('table');
             table.classList.add('table-bordered');
 
             container.appendChild(table);
             table.appendChild(thead);
             table.appendChild(tbody);
-            
-            theadAdd(thead ,Object.keys(ipads[0]),ipads);
-            ipads.forEach((item ,index) => {
-                tbodyAdd(tbody ,Object.values(item));
-            }); 
+
+            theadAdd(thead, Object.keys(ipads[0]), ipads);
+            ipads.forEach((item, index) => {
+                tbodyAdd(tbody, Object.values(item));
+            });
 
             // theadAdd(thead ,Object.keys(employees[0]) ,employees);
             // employees.forEach((item ,index) => {
@@ -239,12 +240,12 @@
         }
 
         window.onload = function () {
-            init();         
+            init();
         }
 
 
     </script>
-    
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
