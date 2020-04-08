@@ -79,7 +79,7 @@
                         array.sort((a, b) => {
                             if (typeof a[key] == 'number')
                                 return a[key] - b[key];
-                            else if (a[key].includes('GB')) {
+                            else if (typeof a[key] == 'string' && a[key].includes('GB')) {
                                 return a[key].replace('GB', '') - b[key].replace('GB', '');
                             }
                             else {
