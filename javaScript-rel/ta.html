@@ -1,0 +1,255 @@
+</html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>台灣鄉鎮...</title>
+
+    <script src="../../modules/helpers.js"></script>
+    <style>
+        html{
+            overflow-x: scroll;
+        }
+        h1 {
+            text-align: center;
+        }
+
+        .row.justify-content-center > div[class*='col-']:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .form-row {
+            margin: 0;
+        }
+        .form-row div[class*='col-']:last-child{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-row span{
+            border-radius: 5px;
+            border: none;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="item">
+                    <h1>台灣(鄉/鎮/區)區號對應</h1>
+                </div>
+            </div>
+
+            <div class="col-8">
+                <form>
+                    <div class="form-row justify-content-center">
+                        <div class="col-10">
+                            <select class="form-control" id="inlineFormCustomSelect" readonly>
+                                <option selected disabled hidden>請選擇城市...</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <div class="item">
+                                <span class="" id="searchNum">
+    
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-8">
+                <div id="msg">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <template id="templateTitle">
+        <tr>
+            <th>城市</th>
+            <th>鄉/鎮/區</th>
+            <th>郵遞區號</th>
+        </tr>
+    </template>
+    <template id="templateData">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </template>
+
+    <script>
+        var tbody = $g('tbody');
+        var searchNum = $g('#searchNum');
+        let myData = [];
+        let currentData = []
+
+        function displayData()
+        {
+            tbody.innerHTML = '';
+            currentData.forEach(x => {
+                addTBody(Object.values(x));
+            });
+            searchNum.innerHTML = `${currentData.reduce((x ,y) => x + y.Districts.length, 0)}筆`;
+        }
+
+        function initSelect()
+        {
+            let select = $g('select');
+            ['全選'].concat(currentData).forEach(x => {
+                let option = document.createElement('option');
+                if(typeof x == 'string')
+                {
+                    option.value = x;
+                    option.innerHTML = x;                    
+                }
+                else
+                {
+                    option.value = x.City;
+                    option.innerHTML = x.City;
+                }
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change' ,(e) => {
+                let key = e.target.value;
+                currentData = key == '全選' ? myData : myData.filter(x => x.City == key);
+
+                displayData();
+            });
+        }
+        
+        function addTHead()
+        {
+            let thead = $g('thead');
+            let template = $g('#templateTitle').content.cloneNode(true); 
+            thead.appendChild(template);
+
+        }
+        function addTBody(row) {
+            let cityName = '';
+            row.forEach((x, y) => {
+                if (y == 0) {
+                    cityName = x;
+                }
+                else if (y == 1) {
+                    Object.values(x).forEach((a, b) => {
+                        let template = $g('#templateData').content.cloneNode(true);
+                        let tds = template.querySelectorAll('td');
+
+                        tds[0].innerHTML = cityName;
+                        tds[1].innerHTML = a.District;
+                        tds[2].innerHTML = a.ZipCode;
+
+                        tbody.appendChild(template);
+                    });
+                }
+            });
+        }
+        
+        function requestJSON() {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                if (xhr.readyState == 4 && xhr.status == 200)//xhr.status == "OK"
+                {
+                    let datas = JSON.parse(this.responseText);
+                    // document.getElementById('msg').innerHTML = this.responseText;
+                    datas.forEach(item => {
+                        let data = {
+                            City: '',
+                            Districts: []
+                        };
+                        Object.values(item).forEach((x, y) => {
+                            if (typeof x == 'string' && y == 0) {
+                                data.City = x;
+                            }
+                            else if (Array.isArray(x) && y == 2) {
+                                x.forEach((a, b) => {
+                                    let townshipCode = {
+                                        District: '',
+                                        ZipCode: ''
+                                    };
+                                    Object.values(a).forEach((f1, f2) => {
+                                        if (f2 == 0) {
+                                            townshipCode.ZipCode = f1;
+                                        }
+                                        else if (f2 == 1) {
+                                            townshipCode.District = f1;
+                                        }
+                                    });
+
+                                    data.Districts.push(townshipCode);
+                                });
+                            }
+                        });
+
+                        myData.push(data);
+                    });
+                    console.log(myData);
+                    console.log(JSON.stringify(myData));
+                    debugger;
+                    currentData = myData;
+                    // tbody.innerHTML = '';
+                    // myData.forEach(x => {
+                    //     addTBody(Object.values(x));
+                    // });
+                    // searchNum.innerHTML = currentData.length;
+                    addTHead();
+                    displayData();
+
+                    initSelect();
+                }
+            
+            };
+            // xhr.open("GET", "http://127.0.0.1:5500/Examples/TaiwanAddress/taiwanAddress.json");
+            xhr.open("GET", "http://frankweb.azurewebsites.net/javaScript-rel/data/taiwanAddress.json");
+            // xhr.open("GET", "https://github.com/donma/TaiwanAddressCityAreaRoadChineseEnglishJSON/blob/master/AllData.json");
+            xhr.send();
+        }
+
+        window.onload = function () {
+            requestJSON();
+        }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
