@@ -51,7 +51,7 @@
 </head>
 
 <body>
-    <div class="container-lg">
+    <div class="container-xl">
         <div class="row">
             <div class="col-12">
                 <h1>口罩地圖</h1>
@@ -125,6 +125,7 @@
                     directionsService.route(request, function (result, status) {
                         if (status == 'OK') {
                             // 回傳路線上每個步驟的細節
+                            console.log(result.routes);
                             console.log(result.routes[0].legs[0].steps);
                             directionsDisplay.setDirections(result);
                         } else {
@@ -183,18 +184,8 @@
             }
 
             initDirectionService();
-        }
-
-        $.ajax({
-            type: "GET",
-            url: "http://127.0.0.1:5502/javaScript-rel/data/maskDatas.json",
-            dataType: "json",
-            success: function (response) {
-                response.features.forEach(item => {
-                    convertData(item);
-                });
-
-                var icons = {
+            
+            var icons = {
                     no_stock: {
                         name: 'no_stock',
                         icon: {
@@ -210,37 +201,38 @@
                         }
                     }
                 };
-
-                map.data.loadGeoJson('http://127.0.0.1:5502/javaScript-rel/data/maskDatas.json', null, (features) => {
-                    markers = features.map(function (feature) {
-                        let marker = new google.maps.Marker({
-                            position: feature.getGeometry().get(0),
-                            icon: feature.getProperty('masksLeft') + feature.getProperty('childMasksLeft') > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
-                            title: feature.getProperty('name'),
-                            animation: google.maps.Animation.DROP,                            
+            map.data.loadGeoJson('http://127.0.0.1:5502/javaScript-rel/data/maskDatas_withaddress.json', null, (features) => {
+                markerList = features.map(function (feature, index) {
+                    if (index == 0) {
+                        feature.forEachProperty(x => {
+                            console.log(x);
                         });
-                        addMarkerEvent(marker);
-                        return marker;
+                        console.log(feature);
+                        // console.log(feature.j);
+                    }
+                    let marker = new google.maps.Marker({
+                        position: feature.getGeometry().get(0),
+                        icon: feature.getProperty('masksLeft') + feature.getProperty('childMasksLeft') > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
+                        title: feature.getProperty('name'),
+                        animation: google.maps.Animation.DROP,
                     });
-
-                    console.log(markers);
-                    const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
-                    var markerCluster = new MarkerClusterer(map, markers, { imagePath: imagePath });
-                    
+                    addMarkerEvent(marker);
+                    return marker;
                 });
+
+                console.log(markerList[0]);
                 map.data.setMap(null);
+
+                const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
+                var markerCluster = new MarkerClusterer(map, markerList, { imagePath: imagePath });
 
                 selects.forEach(x => {
                     x.addEventListener('change', (e) => {
                         alert(e.target.selectedIndex);
                     });
                 });
-            },
-            error: function (r) {
-                console.log('error');
-            }
-        });
-
+            });
+        }
         function initControlButton(name) {
             // console.log(name);
             selects.forEach((item, index) => {
@@ -252,8 +244,6 @@
                 item.appendChild(option);
             });
         }
-
-
         function initDirectionService() {
             // 載入路線服務與路線顯示圖層
             directionsService = new google.maps.DirectionsService();
@@ -262,6 +252,7 @@
             // 放置路線圖層
             directionsDisplay.setMap(map);
         }
+
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlKWP4uWjQIR3WDAWLAu6rUhBfc3_ppag&callback=initMap"
