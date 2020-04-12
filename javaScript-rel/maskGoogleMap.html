@@ -111,6 +111,39 @@
         var directionsDisplay;
         var myLocation = null;
 
+        function addMarkerEvent(marker) {
+            marker.addListener('click', function () {
+                if (myLocation != null) {
+                    // 路線相關設定
+                    var request = {
+                        origin: myLocation,
+                        destination: marker.position,
+                        travelMode: 'DRIVING'
+                    };
+
+                    // 繪製路線
+                    directionsService.route(request, function (result, status) {
+                        if (status == 'OK') {
+                            // 回傳路線上每個步驟的細節
+                            console.log(result.routes[0].legs[0].steps);
+                            directionsDisplay.setDirections(result);
+                        } else {
+                            console.log(status);
+                        }
+                    });
+                }
+
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(function () {
+                        marker.setAnimation(null);
+                    }, 1500);
+                }
+            });
+        }
+
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
             infoWindow.setContent(browserHasGeolocation ?
@@ -179,75 +212,23 @@
                 };
 
                 map.data.loadGeoJson('http://127.0.0.1:5502/javaScript-rel/data/maskDatas.json', null, (features) => {
-                    // map.data.forEach(function (feature) {
-                    //     markerList.push(feature);
-                    // });
-                    
-
-                    const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
                     markers = features.map(function (feature) {
-                        return new google.maps.Marker({
-                            position: feature.getGeometry().get(0)
+                        let marker = new google.maps.Marker({
+                            position: feature.getGeometry().get(0),
+                            icon: feature.getProperty('masksLeft') + feature.getProperty('childMasksLeft') > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
+                            title: feature.getProperty('name'),
+                            animation: google.maps.Animation.DROP,                            
                         });
-                        
+                        addMarkerEvent(marker);
+                        return marker;
                     });
+
+                    console.log(markers);
+                    const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
                     var markerCluster = new MarkerClusterer(map, markers, { imagePath: imagePath });
+                    
                 });
                 map.data.setMap(null);
-                
-                /*                 markerList = dataList.map(function (item, index) {
-                                    if (index < dataList.length) {
-                                        var marker = new google.maps.Marker({
-                                            position: new google.maps.LatLng(item.coordinates[1], item.coordinates[0]),
-                                            icon: item.masksLeft.reduce((x, y) => x + y) > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
-                                            title: item.name,
-                                            animation: google.maps.Animation.DROP,
-                                            // map: map
-                                        });
-                                        marker.setMap(map);
-                                        marker.addListener('click', function () {
-                                            if (myLocation != null) {
-                                                // 路線相關設定
-                                                var request = {
-                                                    origin: myLocation,
-                                                    destination: marker.position,
-                                                    travelMode: 'DRIVING'
-                                                };
-                
-                                                // 繪製路線
-                                                directionsService.route(request, function (result, status) {
-                                                    if (status == 'OK') {
-                                                        // 回傳路線上每個步驟的細節
-                                                        console.log(result.routes[0].legs[0].steps);
-                                                        directionsDisplay.setDirections(result);
-                                                    } else {
-                                                        console.log(status);
-                                                    }
-                                                });
-                                            }
-                
-                                            if (marker.getAnimation() !== null) {
-                                                marker.setAnimation(null);
-                                            } else {
-                                                marker.setAnimation(google.maps.Animation.BOUNCE);
-                                                setTimeout(function () {
-                                                    marker.setAnimation(null);
-                                                }, 1500);
-                                            }
-                                        });
-                
-                                        initControlButton(item.name);
-                                        return marker;
-                                    }
-                
-                                }); */
-                // Path for cluster icons to be appended (1.png, 2.png, etc.)
-                // const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
-
-                // // Enable marker clustering for this map and these markers
-                // console.log(markerList);
-                // const markerClusterer = new MarkerClusterer(map, markerList, { imagePath: imagePath });
-                // console.log(markerClusterer);
 
                 selects.forEach(x => {
                     x.addEventListener('change', (e) => {
