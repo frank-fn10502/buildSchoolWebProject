@@ -711,8 +711,8 @@
                         if (map.getZoom() <= 10) {
                             goToLoc(event.feature.getProperty('NAME_2014'), 10);
                             selects[0].value = event.feature.getProperty('NAME_2014');
+                            console.log(event.feature.getProperty('NAME_2014'));
                         }
-                        console.log(event.feature.getProperty('NAME_2014'));
                         // console.log(map.getZoom());
                     });
 
