@@ -152,7 +152,29 @@
                 'Error: Your browser doesn\'t support geolocation.');
             infoWindow.open(map);
         }
+
+        function initControlButton(county ,town) {
+            // console.log(name);
+            selects.forEach((item, index) => {
+                let option = document.createElement('option');
+                option.classList.add('list-group-item', 'list-group-item-action');
+                option.value = index == 0 ? county : town;
+                option.innerHTML = index == 0 ? county : town;
+
+                item.appendChild(option);
+            });
+        }
+        function initDirectionService() {
+            // 載入路線服務與路線顯示圖層
+            directionsService = new google.maps.DirectionsService();
+            directionsDisplay = new google.maps.DirectionsRenderer();
+
+            // 放置路線圖層
+            directionsDisplay.setMap(map);
+        }
+
         function initMap() {
+            var test = document.querySelector();
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 23.6001582, lng: 120.2482643 },
                 zoom: 8
@@ -179,7 +201,6 @@
                     handleLocationError(true, infoWindow, map.getCenter());
                 });
             } else {
-                // Browser doesn't support Geolocation
                 handleLocationError(false, infoWindow, map.getCenter());
             }
 
@@ -202,14 +223,15 @@
                     }
                 };
             map.data.loadGeoJson('http://127.0.0.1:5502/javaScript-rel/data/maskDatas_withaddress.json', null, (features) => {
+                contryList = [];
+                twonList = [];
                 markerList = features.map(function (feature, index) {
-                    if (index == 0) {
-                        feature.forEachProperty(x => {
-                            console.log(x);
-                        });
+                    initControlButton(feature.getProperty('county') ,feature.getProperty('town'));
+                    if(!feature.getProperty('county')|| !feature.getProperty('town'))
+                    {
                         console.log(feature);
-                        // console.log(feature.j);
                     }
+                    
                     let marker = new google.maps.Marker({
                         position: feature.getGeometry().get(0),
                         icon: feature.getProperty('masksLeft') + feature.getProperty('childMasksLeft') > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
@@ -220,7 +242,7 @@
                     return marker;
                 });
 
-                console.log(markerList[0]);
+                // console.log(markerList[0]);
                 map.data.setMap(null);
 
                 const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
@@ -233,26 +255,6 @@
                 });
             });
         }
-        function initControlButton(name) {
-            // console.log(name);
-            selects.forEach((item, index) => {
-                let option = document.createElement('option');
-                option.classList.add('list-group-item', 'list-group-item-action');
-                option.value = index == 0 ? name.substring(0, 3) : name.substring(2, 5);
-                option.innerHTML = index == 0 ? name.substring(0, 3) : name.substring(2, 5);
-
-                item.appendChild(option);
-            });
-        }
-        function initDirectionService() {
-            // 載入路線服務與路線顯示圖層
-            directionsService = new google.maps.DirectionsService();
-            directionsDisplay = new google.maps.DirectionsRenderer();
-
-            // 放置路線圖層
-            directionsDisplay.setMap(map);
-        }
-
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlKWP4uWjQIR3WDAWLAu6rUhBfc3_ppag&callback=initMap"
