@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>口罩地圖</title>
+    <script src="https://kit.fontawesome.com/95fe5e2d81.js" crossorigin="anonymous"></script>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .box {
+            width: 100%;
+            padding-top: 90%;
+            background-color: #ccc;
+            height: 0;
+            position: relative;
+
+        }
+
+        .box #map {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .col-md-4 {
+            display: flex;
+            flex-direction: column;
+            padding-right: 0;
+            overflow: hidden;
+        }
+
+        .container-xl .col-6.col-md-4 .item:last-child {
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            flex-grow: 1;
+            overflow-y: scroll;
+            padding: 3px;
+        }
+
+        .hideInputPos {
+            height: 0;
+            opacity: .0;
+            margin: 0;
+            padding: 0;
+            transition: .2s;
+        }
+
+        .showInputPos {
+            height: auto;
+            opacity: 1;
+            margin-bottom: 16px;
+            padding: 6px 12px;
+            transition: .2s;
+        }
+
+        #shortInfo.container {
+            padding: 0;
+        }
+
+        address {
+            margin: 0;
+            display: inline-block;
+        }
+
+        #shortInfo #phone a {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* #shortInfo .col-12{
+            display: flex;
+            justify-content: center;
+        } */
+        #shortInfo #name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #shortInfo #phone {
+            display: inline;
+            padding-left: 5px;
+
+        }
+
+        #shortInfo #mask_adult,
+        #shortInfo #mask_child {
+            display: inline-block;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #shortInfo #mask_adult {
+            background-color: #f5a;
+            margin: 5px;
+        }
+
+        #shortInfo #mask_child {
+            background-color: #a5f;
+        }
+
+        #fullInfo .row {
+            /* padding: 0 5px; */
+        }
+
+        #fullInfo .col-12:nth-child(1) .item {
+            display: inline-block;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #fullInfo .col-12:nth-child(1) .item:first-child {
+            background-color: #f5a;
+            margin: 5px;
+        }
+
+        #fullInfo .col-12:nth-child(1) .item:last-child {
+            background-color: #a5f;
+        }
+
+        #fullInfo h2 {
+            text-align: center;
+        }
+
+        #fullInfo .col-12 h2+p {
+            text-align: center;
+        }
+
+        #fullInfo .col-12:nth-child(3) {
+            margin-bottom: 10px;
+        }
+
+        #fullInfo .col-12:nth-child(5) {
+            /* padding: 20px; */
+        }
+
+        #fullInfo table {
+            text-align: center;
+        }
+
+        #fullInfo table td,
+        #fullInfo table th {
+            padding: 5px;
+        }
+
+        .loading-block {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(150, 150, 150, .6);
+        }
+
+        .loading-block .title h2 {
+            position: relative;
+            transform: translateY(100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-xl">
+        <div class="row">
+            <div class="col-12">
+                <h1>口罩地圖</h1>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="item">
+                    <form class="mb-3">
+                        <div class="form-row">
+                            <div class="col-12 row no-gutters justify-content-center mb-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="position-button" id="self-pos"
+                                        value="option1" checked>
+                                    <label class="form-check-label" for="self-pos">現在位置</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="position-button" id="costum-pos"
+                                        value="option2" disabled>
+                                    <label class="form-check-label" for="costum-pos">其他位置</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" class="form-control hideInputPos" name="" id="costum-position-input"
+                                    placeholder="請輸入地址...">
+                            </div>
+                            <div class="col-6">
+                                <select class="form-control" name="" id="">
+                                    <option selected disabled hidden>--城市--</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-control" name="" id="">
+                                    <option selected disabled hidden>--行政區--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="item">
+                    <div class="list-group">
+                        <!-- <button type="button" class="list-group-item list-group-item-action">Dapibus ac facilisis in</button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-8">
+                <div class="box">
+                    <div id="map">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading-block">
+        <div class="title">
+            <h2>loading...</h2>
+        </div>
+        <div class="spinner-border m-5" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- <div class="container" id='shortInfo'>
+        <div class="row no-gutters">
+            <div class="col-12">
+                <span id="name">中美藥局</span>
+                <address id='phone'>
+                    <a href="#">(02 -27627468)</a>
+                </address>
+            </div>
+            <div class="col-12">
+                <address id='address'>
+                    <a href="#">台北市松山區富錦街531號</a>
+                </address>
+            </div>
+            <div class="col-12">
+                <span id='mask_adult'>
+                    <i class="fas fa-user">200</i>
+                </span>
+                <span id='mask_child'>
+                    <i class="fas fa-baby">002</i>
+                </span>
+            </div>
+        </div>
+    </div> -->
+
+    <template id='shortDisplay'>
+        <div class="container" id='shortInfo'>
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <span id="name"></span>
+                    <address id='phone'>
+                        <a href="#"></a>
+                    </address>
+                </div>
+                <div class="col-12">
+                    <address id='address'>
+                        <a href="#"></a>
+                    </address>
+                </div>
+                <div class="col-12">
+                    <span id='mask_adult'>
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span id='mask_child'>
+                        <i class="fas fa-baby"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id='fullDisplay'>
+        <div class="container-fulid" id='fullInfo'>
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="item">
+                        <i class="fas fa-user"></i>
+                        <span id='mask_adult_full'>
+                            52
+                        </span>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-baby"></i>
+                        <span id='mask_child_full'>
+                            556
+                        </span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <span id="name_full">中美藥局</span>
+                    <address id='phone_full'>
+                        <a href="#">(02 -27627468)</a>
+                    </address>
+                </div>
+                <div class="col-12">
+                    <address id='address_full'>
+                        <a href="#">台北市松山區富錦街531號</a>
+                    </address>
+                </div>
+                <div class="col-12">
+                    <h2>Note</h2>
+                    <p id='note_full'>本局每日早上9:00，發放口罩號碼牌</p>
+                </div>
+                <div class="col-12">
+                    <h2>營業時間</h2>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">時段\星期</th>
+                                <th scope="col">星期一</th>
+                                <th scope="col">星期二</th>
+                                <th scope="col">星期三</th>
+                                <th scope="col">星期四</th>
+                                <th scope="col">星期五</th>
+                                <th scope="col">星期六</th>
+                                <th scope="col">星期日</th>
+                            </tr>
+                        </thead>
+                        <tbody id='service_periods_full'>
+                            <tr>
+                                <th>上午</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <th>上午</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <th>上午</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+
+    <script src="./js/maskMap.js">
+    </script>
+    <script>
+        var geocoder = null, infoWindow = null;
+        var map = null, selfPosition = { marker: null, pos: null }, markerList = [];
+        var maskDataList = [
+        ]
+        var selects = document.querySelectorAll('select');
+        var subMarkerDisplay = document.querySelector('.item .list-group');
+        let calDisplayHeight = () => document.querySelector('.box #map').offsetHeight - document.querySelector("div[class*='col-'] .item:first-child").offsetHeight - 6;
+
+        function addDataToInfoWindow(template, feature) {
+            let datList = ['name', 'phone', 'address', 'mask_adult', 'mask_child', 'note', 'service_periods']
+            datList.forEach(x => {
+                let temp_i = (x + "_full");
+                let target = template.getElementById(temp_i);
+                if (x != 'service_periods')
+                    target.innerHTML = feature[x];
+                else {
+                    let t = [feature[x].substring(0, 7), feature[x].substring(7, 14), feature[x].substring(14)];
+                    let period = ['上午', '下午', '晚上'];
+                    target.innerHTML = '';
+                    t.forEach((x, i) => {
+                        let tr = document.createElement('tr');
+                        let th = document.createElement('th');
+                        th.innerHTML = period[i];
+                        th.setAttribute('scope', 'row');
+                        tr.appendChild(th);
+                        Array.from(x).forEach((y, j) => {
+                            let td = document.createElement('td');
+                            td.innerHTML = y.toLowerCase() == 'n' ? '○' : '×';
+                            tr.appendChild(td);
+                        });
+                        target.appendChild(tr);
+                    });
+                }
+            });
+        }
+        function jumpMarker(marker, feature) {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            }
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+                marker.setAnimation(null);
+            }, 1500);
+            resetCenter(marker.getPosition().lat(), marker.getPosition().lng());
+
+            let template = document.getElementById('fullDisplay').content.cloneNode(true);
+            addDataToInfoWindow(template, feature);
+
+            // console.log(template.outerHTML);
+            // console.log(template);
+            let dataView = document.createElement('div');
+            dataView.appendChild(template);
+            infoWindow.setContent(dataView.outerHTML);
+            infoWindow.open(map, marker);
+        }
+        function initAPIObj() {
+            geocoder = new google.maps.Geocoder();
+            infoWindow = new google.maps.InfoWindow();
+        }
+        function resetCenter(...pos) {
+            selfPosition.pos = {
+                lat: pos[0],
+                lng: pos[1]
+            };
+
+            map.setCenter(selfPosition.pos);
+            map.setZoom(20);
+        }
+        function initSelfPos() {
+            let handleLocationError = function (rowserHasGeolocation, infoWindow, pos) {
+                infoWindow.setPosition(pos);
+                infoWindow.setContent(browserHasGeolocation ?
+                    'Error: The Geolocation service failed.' :
+                    'Error: Your browser doesn\'t support geolocation.');
+                infoWindow.open(map);
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    selfPosition.pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    if (!selfPosition.marker) {
+                        selfPosition.marker = new google.maps.Marker({
+                            position: selfPosition.pos,
+                            title: "It's Me",
+                            map: map
+                        });
+                    }
+                    else {
+                        selfPosition.marker.position = selfPosition.pos;
+                    }
+
+
+                    map.setCenter(selfPosition.pos);
+                    map.setZoom(12);
+
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+        function initPosControlPanel() {
+            let selfRadioBtn = document.querySelector('#self-pos');
+            let costumRadioBtn = document.querySelector('#costum-pos');
+            let inputPosText = document.querySelector('#costum-position-input');
+
+            selfRadioBtn.addEventListener('change', (e) => {
+                inputPosText.classList.add('hideInputPos');
+                inputPosText.classList.remove('showInputPos');
+                initSelfPos();
+            });
+            costumRadioBtn.addEventListener('change', (e) => {
+                inputPosText.classList.remove('hideInputPos');
+                inputPosText.classList.add('showInputPos');
+                setTimeout(() => {
+                    subMarkerDisplay.style.height = `${calDisplayHeight()}px`;
+                }, 200);
+                let address = document.getElementById('costum-position-input').value;
+                goToLoc(address, null)
+            });
+        }
+        function createButtonView(feature) {
+            let template = document.getElementById('shortDisplay').content.cloneNode(true);
+            let nodes = ['name', 'phone', 'address', 'mask_adult', 'mask_child'];
+            nodes.forEach(x => {
+                let target = template.getElementById(x);
+                // console.log(target, feature, feature[x], x);
+                target.innerHTML += x != 'phone' ? feature[x] : `(${feature[x]})`;
+            });
+            return template;
+        }
+        function initMarkerDisplay(subMarkers) {
+            subMarkerDisplay.innerHTML = '';
+            subMarkers.forEach((x, index) => {
+                let button = document.createElement('button');
+                button.classList.add('list-group-item', 'list-group-item-action');
+                button.appendChild(createButtonView(x.other));
+                button.setAttribute('data-index', `${x.other.county} ${x.other.town} ${x.other.id}`);
+                // console.log(x.other);
+                // button.innerHTML = Object.values(x.other).reduce((pre ,now) => {
+                //         return pre += `<p>${now}</p>`;
+                // },'');
+                subMarkerDisplay.appendChild(button);
+
+                button.addEventListener('click', (e) => {
+                    let datas = button.getAttribute('data-index').split(' ');
+                    feature = maskDataList.find(x => x.country == datas[0]);
+                    feature = feature.towns.find(x => x.town == datas[1]);
+                    feature = feature.markerList.find(x => x.other.id == datas[2]);
+                    jumpMarker(x.marker, feature.other);
+                });
+            });
+        }
+
+        function goToLoc(address, zoom) {
+            geocoder.geocode({ 'address': address }, function (results, status) {
+                if (status == 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    if (zoom)
+                        map.setZoom(zoom);
+                    else
+                        map.fitBounds(results[0].geometry.viewport);
+
+                } else {
+                    console.log(status);
+                }
+            });
+        }
+        function initCityAndTownSelect() {
+            maskDataList.forEach(data => {
+                let option = document.createElement('option');
+                option.value = data.country;
+                option.text = data.country;
+                selects[0].appendChild(option);
+            });
+            selects[0].addEventListener('change', (e) => {
+                let data = maskDataList.find(x => x.country == e.target.value);
+                // console.log(e.target.value, data);
+                subMarkerDisplay.innerHTML = '';
+                selects[1].innerHTML = '<option selected disabled hidden>--行政區--</option>';
+                data.towns.forEach(item => {
+                    let option = document.createElement('option');
+                    option.value = item.town;
+                    option.text = item.town;
+                    selects[1].appendChild(option);
+                });
+                goToLoc(e.target.value, 10);
+            });
+            selects[1].addEventListener('change', (e) => {
+                // console.log(selects[0].selectedOptions[0].value);
+                let data = maskDataList.find(item => {
+                    // console.log(item.country ,selects[0].selectedOptions[0].value);
+                    return item.country == selects[0].selectedOptions[0].value;
+                });
+                // console.log(data);
+                data = data.towns.find(x => {
+                    return x.town == e.target.value;
+                });
+                goToLoc(`${selects[0].selectedOptions[0].value} ${e.target.value}`, 13);
+                initMarkerDisplay(data.markerList);
+
+            });
+        }
+
+
+        function addFrankCostumData(country, town, marker, feature) {
+
+            if (country && town) {
+                let includeCountry = maskDataList.some((x) => x.country == country);
+                let includeTown = maskDataList.some((x) => x.country == country && x.towns.some(x => x.town == town));
+                let data = null;
+                if (!includeCountry) {
+                    data = {
+                        country: country,
+                        towns: [
+                            {
+                                town: town,
+                                markerList: []
+                            }
+                        ]
+                    }
+                    maskDataList.push(data);
+                }
+                else if (!includeTown) {
+                    let townData = {
+                        town: town,
+                        markerList: []
+                    }
+                    data = maskDataList.find(x => x.country === country);
+                    data.towns.push(townData);
+                }
+                data = maskDataList.find(x => x.country === country);
+                data = data.towns.find(x => x.town === town);
+                let properties = {
+                    marker: marker,
+                    other: {}
+                }
+                feature.forEachProperty((x, y) => {
+                    properties.other[y] = x;
+                });
+                data.markerList.push(properties);
+
+            }
+            else {
+                // console.log(feature);
+            }
+        }
+        function loadAllMarkers(json) {
+            var icons = {
+                no_stock: {
+                    name: 'no_stock',
+                    icon: {
+                        url: 'imgs/maskmap/No_Cross.svg.png', // url
+                        scaledSize: new google.maps.Size(20, 20), // scaled size
+                    }
+                },
+                have_stock: {
+                    name: 'have_stock',
+                    icon: {
+                        url: 'imgs/maskmap/box.png', // url
+                        scaledSize: new google.maps.Size(20, 20), // scaled size
+                    }
+                }
+            };
+
+            map.data.loadGeoJson(json, null, (features) => {
+                console.log(features);
+                markerList = features.map(function (feature, index) {
+
+                    let marker = new google.maps.Marker({
+                        position: feature.getGeometry().get(0),
+                        icon: feature.getProperty('mask_adult') + feature.getProperty('mask_child') > 0 ? icons['have_stock'].icon : icons['no_stock'].icon,
+                        title: feature.getProperty('name'),
+                        customInfo: `${feature.getProperty('county')} ${feature.getProperty('town')} ${feature.getProperty('id')}`
+                        // animation: google.maps.Animation.DROP,
+                    });
+                    marker.addListener('click', () => {
+                        let datas = marker.customInfo.split(' ');
+                        customf = maskDataList.find(x => x.country == datas[0]);
+                        customf = customf.towns.find(x => x.town == datas[1]);
+                        customf = customf.markerList.find(x => x.other.id == datas[2]);
+                        jumpMarker(marker, customf.other);
+                    });
+                    addFrankCostumData(feature.getProperty('county'), feature.getProperty('town'), marker, feature);
+                    return marker;
+                });
+                map.data.setMap(null);
+
+                const imagePath = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m";
+                var markerCluster = new MarkerClusterer(map, markerList, { imagePath: imagePath });
+
+                console.log(maskDataList);
+                initCityAndTownSelect();
+                setTimeout(() => {
+                    document.querySelector('.loading-block').style.display = 'none';
+                }, 500)
+
+            });
+        }
+
+        function initMap() {
+            initAPIObj();
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 23.6001582, lng: 120.2482643 },
+                zoom: 8
+            });
+        }
+
+
+        window.onload = () => {
+
+            window.addEventListener("resize", (e) => {
+                subMarkerDisplay.style.height = `${calDisplayHeight()}px`;
+                console.log('box size change');
+                console.log(document.querySelector('.box #map').offsetHeight, document.querySelector("div[class*='col-'] .item:first-child").offsetHeight);
+                console.log(calDisplayHeight());
+            });
+            subMarkerDisplay.style.height = `${calDisplayHeight()}px`;
+
+            initPosControlPanel();
+            // loadAllMarkers('http://127.0.0.1:5502/javaScript-rel/data/maskDatas_withaddress.json');
+            loadAllMarkers('https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json');
+            // $.ajax({
+            //     type: "GET",
+            //     url: 'http://127.0.0.1:5502/javaScript-rel/data/maskDatas_withaddress.json',
+            //     dataType: "json",
+            //     success: function (response) {
+
+            //     }
+            // });
+        };
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlKWP4uWjQIR3WDAWLAu6rUhBfc3_ppag&callback=initMap"
+        async defer></script>
+    <script
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+</body>
+
+</html>
