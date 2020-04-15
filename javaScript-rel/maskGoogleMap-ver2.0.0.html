@@ -690,7 +690,7 @@
                 var markerCluster = new MarkerClusterer(map, markerList, { imagePath: imagePath });
 
 
-                map.data.loadGeoJson('http://127.0.0.1:5502/javaScript-rel/data/taiwanCities.geojson.json', null, (countryfs) => {
+                map.data.loadGeoJson('https://raw.githubusercontent.com/frank-fn10502/buildSchoolWebProject/master/javaScript-rel/data/taiwanCities.geojson.json', null, (countryfs) => {
                     map.data.setStyle({
                         strokeWeight: 1,
                         strokeOpacity: .5,
