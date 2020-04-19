@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>n-puzzle</title>
+    <link rel="stylesheet" href="css/puzzle.css">
+</head>
+
+<body>
+    <h1>puzzle</h1>
+    <div class="container-xl">
+        <div class="row">
+
+            <div class="col-12">
+                <div class="wrap">
+                    <div class="source-controler">
+                        <div class="file-setting">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn dropdown-toggle" type="button"
+                                        data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">預設圖片</button>
+                                    <div class="dropdown-menu p-0">
+                                        <ul class="list-group" id='file-selecct'>
+                                            <button type="button" class="list-group-item list-group-item-action active">Dapibus ac facilisis in</button>
+                                            <button type="button" class="list-group-item list-group-item-action">Morbi leo risus</button>
+                                            <button type="button" class="list-group-item list-group-item-action">Porta ac consectetur ac</button>
+                                        </ul>
+                                    </div>
+                                    <!-- <button class="btn" type="button">選擇圖片</button> -->
+                                    <button class="btn" type="button">上傳檔案</button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="" aria-label=""
+                                    aria-describedby="basic-addon1" readonly>
+                            </div>
+                        </div>
+                        <div class="game-setting">
+                            <select name="" id="game-difficulty">
+                                <option value="">3 x 3</option>
+                                <option value="">4 x 4</option>
+                                <option value="">5 x 5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="button-group">
+                    <button class="btn btn-primary aliveBtn" id="start">開始遊戲</button>
+                    <button class="btn btn-secondary" id="autoCompletion" disabled >自動完成</button>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="game-area">
+                    <div class="box">
+                        <div class="item-group">
+                            <!-- 動態生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <canvas>
+
+    </canvas>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script src="javaScript/puzzle.js"></script>
+</body>
+
+</html>
