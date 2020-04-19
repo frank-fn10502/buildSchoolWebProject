@@ -92,9 +92,13 @@ async function autoCompletion() {
 
     let isFind = false;
     let startIndex = createAutoList(); //[rwo ,col]
+    // debugger
     openList = [];
     closeList = [];
-
+    animaSourceList = [];
+    animaTargetList = [];
+    animaterList = [];
+    signList = [];
 
     let f = (g ,pattern) => Number(g) + h(pattern);
     let copyArray = (array) =>{
@@ -218,6 +222,13 @@ async function autoCompletion() {
 }
 
 function animation() {
+    if(!isStart) 
+    {
+        clearTimeout(animate);
+        animater = null;
+        return;
+    }
+
     if(animater == null && animaSourceList.length > 0)
     {
         animater = animaterList[0];
@@ -231,7 +242,7 @@ function animation() {
     moveTotalTimes++;
     // console.log(`${moveUnit * moveTotalTimes * sign[0]}px`);
 
-    if (moveTotalTimes < moveMaxTimes)
+    if ( moveTotalTimes < moveMaxTimes)
         animate = setTimeout(animation, 20);
     else {
         clearTimeout(animate);
@@ -244,8 +255,9 @@ function animation() {
         if (checkStatus()) {
             console.log('you win');
             setTimeout(()=>{
-                alert('you win');
-            },300);
+                if(isStart)
+                    alert('you win');
+            },50);
             
 
             startBtn.disabled = false;
@@ -315,7 +327,7 @@ function change(i1, i2) {
     }
     catch(e)
     {
-        console.log(img ,imgList[twoD2OneD(i2)]);
+        console.log(imgList[twoD2OneD(i1)].querySelector('img') ,imgList[twoD2OneD(i2)]);
         debugger;
     }
 }
@@ -441,6 +453,9 @@ function initGame() {
     autoBtn.disabled = true;
     autoBtn.classList.add('btn-secondary');
     autoBtn.classList.remove('btn-primary' ,'aliveBtn' ,'ml-2');
+    startBtn.disabled = false;
+    startBtn.classList.remove('btn-secondary');
+    startBtn.classList.add('btn-primary' ,'aliveBtn');
 }
 function startGame() {
     gameArea.querySelector('.item-group').innerHTML = '';
