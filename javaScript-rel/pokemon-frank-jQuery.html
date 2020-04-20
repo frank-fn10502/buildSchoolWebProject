@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>pokemon-frank</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        img {
+            width: 100%;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>!!!寶可夢圖鑑!!!</h1>
+    <button onclick="pullDict(890)">load all</button>
+    <button onclick="addPokemon()">load one by one</button>
+    <button onclick="subPokemon()">delete one by one</button>
+
+    <span id="counter"></span>
+    <div class="container-fulid">
+        <div class="row" id='target'>
+
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        var container = $('#target');
+        var num = $('#counter');
+        var pokemonArray = [];
+
+        function currentNum(){
+            return pokemonArray.reduce((pre, now) => {
+                if (now != null) {
+                    pre++;
+                }
+                return pre;
+            }, 0);
+        }
+        function showNum() {
+            num.html(`數量: ${currentNum()}`);
+        }
+        function addPokemon() {
+            if(currentNum() >= 891) return;
+
+            let counter = 0;
+            for (let item of pokemonArray) {
+                if (item == null) {
+                    break;
+                }
+                counter++;
+            }
+            let name = (counter + 1).toString().padStart(3, '0');
+            let item = $('<img>').attr("src", `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${name}.png`)
+                .attr('data-index', (counter + 1))
+                .click(function (e) {
+                    subPokemon(e.target);
+                });
+
+            let box = $('<div>').addClass('col-3').append(item);
+
+            if (counter >= pokemonArray.length) {
+                pokemonArray.push((counter + 1));
+                box.appendTo(container);
+            }
+            else
+            {
+                container.children(".col-3").eq(counter).before(box);
+                pokemonArray[counter] = (counter + 1);
+            }
+            // console.log(pokemonArray ,counter);
+            // console.log(item);
+            showNum();
+        }
+        function subPokemon(target = null) {
+            if (target) {
+                target.parentElement.remove();
+                let index = pokemonArray.indexOf(Number(target.getAttribute('data-index')));
+                pokemonArray[index] = null;
+            }
+            else if (pokemonArray.length > 0) {
+                for (let i = pokemonArray.length - 1; i >= 0; i--) {
+                    if (pokemonArray[i]) {
+                        container.children(".col-3").eq(i).remove();
+                        counter = pokemonArray.length;
+                        pokemonArray.splice(i);
+                        break;
+                    }
+                }
+            }
+            showNum();
+        }
+        function pullDict(n) {
+            for (; currentNum() <= n;) {
+                addPokemon();
+            }
+            console.log('Done!!!');
+        }    
+    </script>
+</body>
+
+</html>
