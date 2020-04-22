@@ -1,0 +1,88 @@
+@import "reset";
+
+h1{
+    display: block;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 10px 15px;
+    padding-left: 0;
+}
+.calender-title{
+    display: flex;
+    align-items: center;
+    
+    span{
+        cursor: pointer;
+    }
+    span:not(.control){
+        display: inline-block;
+        font-size: 24px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin: 0 10px 0 0;
+    }
+    .control-group{
+        display: inline-block;
+        padding-left: 30px;
+        .control{
+            text-align: center;
+            vertical-align: middle;
+            display: inline-block;
+            padding: 10px;
+            margin: 0 5px 0 0;
+            
+    
+            border-radius: 5px;
+            border: 1px solid transparent;
+            background-color: transparent;
+            color:#000;
+
+            transition: .3s;
+        }
+        .control:hover{
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #000;
+            color:#fff
+        }
+    }
+}
+.calender-body{
+    th{
+        padding: 10px 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+    .table td{
+        // $left-top: 5px;
+        // padding: $left-top 30 - $left-top 40 - $left-top $left-top;
+        box-sizing: border-box;
+
+        .box{
+            margin-right: auto;
+            width: 100%;
+            height: 0;
+            padding-top: 60%;
+            position: relative;
+            .item{
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+            }
+        }
+        span{
+            display: block;
+        }
+        .other{
+            color: #aaa;
+            font-size: 14px;
+        }
+        .now{
+            color: #000;
+            font-size: 18px;
+        }
+    }
+}
