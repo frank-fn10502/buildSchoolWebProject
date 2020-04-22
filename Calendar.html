@@ -44,13 +44,47 @@
                                 <th scope="col">三</th>
                                 <th scope="col">四</th>
                                 <th scope="col">五</th>
-                                <th scope="col">六</th>                                
+                                <th scope="col">六</th>
                             </tr>
                         </thead>
                         <tbody>
 
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="setEventPanel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="title">
+                        <input type="text" name="" class="modal-title w-100" id="eventTitle" placeholder=" 請輸入標題">
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="time">
+                        <span><i class="far fa-clock"></i></span>
+                        <input type="date" id="startDate">
+                        <span>-</span>
+                        <input type="date" id="endDate">
+                    </div>
+                    <div class="desc">
+                        <div class="form-group">
+                            <label for="desc" class="mb-2">敘述</label>
+                            <textarea name="" id="desc" class="form-control" rows="4" placeholder="敘述..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="warring notfitData">等等~不可以喔</div>
+                    <button type="button" class="btn btn-primary" id="confirm">確定</button>
                 </div>
             </div>
         </div>
