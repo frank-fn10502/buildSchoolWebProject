@@ -628,7 +628,6 @@ function initGameSetting() {
             currentFile = url;
             displayImgPath();
         }
-
     });
 
     /* -----------------radioBtn select source------- */
