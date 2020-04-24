@@ -6,8 +6,9 @@ let partsNum = 3;
 let offsetImg = 10;
 var isStart = false;
 
-let maxEdge = 9;
+let maxEdge = 15;
 let sourceFileNum = 3;
+let uploadName = undefined;
 let rootDataFile = './imgs/puzzle/';
 let currentFile = '';
 
@@ -26,8 +27,8 @@ let autoList = [];
 let openList = [];
 let closeList = []; //二元搜尋樹(not yet)
 let finishedList = [[0, 0], [0, 1], [0, 2],
-                    [1, 0], [1, 1], [1, 2],
-                    [2, 0], [2, 1], [2, 2]];
+[1, 0], [1, 1], [1, 2],
+[2, 0], [2, 1], [2, 2]];
 // let node = {
 //     parent : '',
 //     child: [],
@@ -37,6 +38,7 @@ let animaSourceList = [];
 let animaTargetList = [];
 let animaterList = [];
 let signList = [];
+let totalPath = [];
 
 function createAutoList() {
     autoList = []
@@ -51,11 +53,11 @@ function createAutoList() {
             rowList.push(id);
         }
         else {
-            rowList.push(partsNum*partsNum-1);
-            startIndex = [row ,col];
+            rowList.push(partsNum * partsNum - 1);
+            startIndex = [row, col];
         }
 
-        if (col >= partsNum-1) {
+        if (col >= partsNum - 1) {
             autoList.push(rowList);
             rowList = [];
             row++;
@@ -68,7 +70,7 @@ function createAutoList() {
 function createNodeKey(pattern) {
     let result = '';
     pattern.forEach(items => {
-        items.forEach(x=> {
+        items.forEach(x => {
             result += x.toString();
         });
     });
@@ -100,34 +102,33 @@ async function autoCompletion() {
     animaterList = [];
     signList = [];
 
-    let f = (g ,pattern) => Number(g) + h(pattern);
-    let copyArray = (array) =>{
+    let f = (g, pattern) => Number(g) + h(pattern);
+    let copyArray = (array) => {
         let newArray = JSON.stringify(array);
         newArray = JSON.parse(newArray);
         return newArray;
     }
-    let findNewPattern = (nowIndex ,pattern ,i) =>{
+    let findNewPattern = (nowIndex, pattern, i) => {
         let dirList = [[-1, 0], [0, -1], [1, 0], [0, 1]];
-        let patternList = dirList.filter(x =>{
-            let row = nowIndex[0] + x[0]; 
-            let col = nowIndex[1] + x[1]; 
-            return !(row < 0 ||  row >= partsNum || col < 0 || col >= partsNum);
-        }).map(x =>{
-            let row = nowIndex[0] + x[0]; 
-            let col = nowIndex[1] + x[1]; 
-            return [row ,col];
-        }).map(x =>{
+        let patternList = dirList.filter(x => {
+            let row = nowIndex[0] + x[0];
+            let col = nowIndex[1] + x[1];
+            return !(row < 0 || row >= partsNum || col < 0 || col >= partsNum);
+        }).map(x => {
+            let row = nowIndex[0] + x[0];
+            let col = nowIndex[1] + x[1];
+            return [row, col];
+        }).map(x => {
             let newAutoList = copyArray(pattern);
             let temp = newAutoList[x[0]][x[1]];
             newAutoList[x[0]][x[1]] = newAutoList[nowIndex[0]][nowIndex[1]];
             newAutoList[nowIndex[0]][nowIndex[1]] = temp;
 
             let result = createNodeKey(newAutoList);
-            if(closeList.findIndex(x => x.key == result) == -1)
-            {
-                return [x ,newAutoList ,f(i ,newAutoList)];
+            if (closeList.findIndex(x => x.key == result) == -1) {
+                return [x, newAutoList, f(i, newAutoList)];
             }
-            else{
+            else {
                 return undefined
             }
         }).filter(x => x);
@@ -135,49 +136,43 @@ async function autoCompletion() {
         return patternList;
     };
 
-    console.log('autoList' ,autoList);
+    console.log('autoList', autoList);
     let newAutoList = copyArray(autoList);
 
     let current = {
         parent: null,
-        data: [startIndex ,newAutoList ,f(0 ,newAutoList)],
+        data: [startIndex, newAutoList, f(0, newAutoList)],
         //blankIndex ,parten ,f()
         key: createNodeKey(newAutoList),//一串編碼(二元搜尋數) ,8: blank       
         level: 0
     }
     openList.push(current);
-    for(let i = 1 ; !isFind ;) 
-    {
+    for (let i = 1; !isFind;) {
         current = openList[0];
-        let movePatternList = findNewPattern(current.data[0] ,current.data[1] ,current.level+1);
-        openList.splice(openList.indexOf(current) ,1);
+        let movePatternList = findNewPattern(current.data[0], current.data[1], current.level + 1);
+        openList.splice(openList.indexOf(current), 1);
         closeList.push(current);
 
-        for(let item of movePatternList)
-        {
+        for (let item of movePatternList) {
             let result = createNodeKey(item[1]);
             let findIndex = openList.findIndex(x => x.key == result);
             let node = {
                 parent: current,
-                data : item,
+                data: item,
                 key: result,
-                level: current.level+1
+                level: current.level + 1
             }
-            if(findIndex != -1)
-            {
+            if (findIndex != -1) {
                 let oldFn = openList[findIndex].data[2];
                 let newFn = item[2];
-                if(oldFn > newFn)
-                {
+                if (oldFn > newFn) {
                     openList[findIndex].parent = node;
                     openList[findIndex].level = node.level + 1;
                     openList[findIndex].data = item;
                 }
             }
-            else
-            {
-                if(result == '012345678')
-                {
+            else {
+                if (result == '012345678') {
                     current = node;
                     isFind = true;
                     break;
@@ -185,15 +180,14 @@ async function autoCompletion() {
                 openList.push(node);
             }
         }
-        openList.sort((a,b) =>{
+        openList.sort((a, b) => {
             return a.data[2] - b.data[2];
         });
-        // console.log(current.level ,openList.length ,closeList.length);
+        console.log(current.level, openList.length, closeList.length);
     }
 
     let path = [];
-    while(current != null)
-    {
+    while (current != null) {
         path.push(current.data[0]);
         current = current.parent;
     }
@@ -202,19 +196,17 @@ async function autoCompletion() {
 
     let pre = null;
 
-    for(let x of path)
-    {
-        if(pre != null && (pre[0] != x[0] || pre[1] != x[1]))
-        {
+    for (let x of path) {
+        if (pre != null && (pre[0] != x[0] || pre[1] != x[1])) {
             animaSourceList.push(x);
             animaTargetList.push(pre);
             animaterList.push(Array.from(imgList).find(y => {
-                let result  = y.getAttribute('data-index').split(' ')
-                                .map(x => Number(x));
+                let result = y.getAttribute('data-index').split(' ')
+                    .map(x => Number(x));
                 result = Math.abs(result[0] - x[0]) + Math.abs(result[1] - x[1]);
                 return result == 0;
             }).parentElement);
-            signList.push([pre[1] - x[1] ,pre[0] - x[0]]);
+            signList.push([pre[1] - x[1], pre[0] - x[0]]);
         }
         pre = x;
     }
@@ -222,19 +214,18 @@ async function autoCompletion() {
 }
 
 function animation() {
-    if(!isStart) 
-    {
+    if (!isStart) {
         clearTimeout(animate);
         animater = null;
         return;
     }
 
-    if(animater == null && animaSourceList.length > 0)
-    {
+    if (animater == null && animaSourceList.length > 0) {
         animater = animaterList[0];
         animaSource = animaSourceList[0];
         animaTarget = animaTargetList[0];
         sign = signList[0];
+        // debugger
     }
 
     animater.style.left = `${moveUnit * moveTotalTimes * sign[0]}px`;
@@ -242,7 +233,7 @@ function animation() {
     moveTotalTimes++;
     // console.log(`${moveUnit * moveTotalTimes * sign[0]}px`);
 
-    if ( moveTotalTimes < moveMaxTimes)
+    if (moveTotalTimes < moveMaxTimes)
         animate = setTimeout(animation, 20);
     else {
         clearTimeout(animate);
@@ -254,24 +245,28 @@ function animation() {
         animater = null;
         if (checkStatus()) {
             console.log('you win');
-            setTimeout(()=>{
-                if(isStart)
+            setTimeout(() => {
+                if (isStart)
                     alert('you win');
-            },50);
-            
+            }, 50);
+
 
             startBtn.disabled = false;
             startBtn.classList.remove('btn-secondary');
-            startBtn.classList.add('btn-primary' ,'aliveBtn');
+            startBtn.classList.add('btn-primary', 'aliveBtn');
+            animaterList = [];
+            animaSourceList = [];
+            animaTargetList = [];
+            signList = [];
         }
-
-        animaterList.splice(0, 1);
-        animaSourceList.splice(0, 1);
-        animaTargetList.splice(0, 1);
-        signList.splice(0, 1);
-        if(animaSourceList.length > 0)
-        {
-            animation();
+        else {
+            animaterList.splice(0, 1);
+            animaSourceList.splice(0, 1);
+            animaTargetList.splice(0, 1);
+            signList.splice(0, 1);
+            if (animaSourceList.length > 0) {
+                animation();
+            }
         }
     }
 }
@@ -288,10 +283,13 @@ function checkStatus() //是否勝利...
 
             pre = data;
         }
-        else if (counter < 9) {
+        else if (counter < partsNum * partsNum) {
             return false;
         }
     }
+    autoBtn.disabled = true;
+    autoBtn.classList.add('btn-secondary');
+    autoBtn.classList.remove('btn-primary', 'aliveBtn', 'ml-2');
     return true;
 }
 function twoD2OneD(a) {
@@ -320,20 +318,21 @@ function findMovePos(data) {
     }
 }
 function change(i1, i2) {
-    try
-    {
+    try {
         let img = imgList[twoD2OneD(i1)].querySelector('img');
         imgList[twoD2OneD(i2)].appendChild(img);
     }
-    catch(e)
-    {
-        console.log(imgList[twoD2OneD(i1)].querySelector('img') ,imgList[twoD2OneD(i2)]);
-        debugger;
+    catch (e) {
+        console.log(imgList[twoD2OneD(i1)].querySelector('img'), imgList[twoD2OneD(i2)]);
+        // debugger;
     }
 }
 function displayRandom() {
     let r = partsNum * 30;
     let pComponent = imgList[partsNum * partsNum - 1];
+    let source, target;
+
+    totalPath.push([partsNum - 1, partsNum - 1]);
     for (let i = 0; i < r; i++) {
         let pData = pComponent.getAttribute('data-index').split(' ');
         let dirList = [[-1, 0], [0, -1], [1, 0], [0, 1]];
@@ -345,16 +344,22 @@ function displayRandom() {
             if ((rx < 0 || ry < 0) || (rx >= partsNum || ry >= partsNum)) {
                 return false;
             }
+            else if (target && rx - target[0] == 0 && ry - target[1] == 0) {
+                return false;
+            }
             else {
                 return true;
             }
         });
         let move = dirList[Math.floor(Math.random() * dirList.length)];
-        let source = [Number(pData[0]) + Number(move[0]), Number(pData[1]) + Number(move[1])]
-        let target = pData;
+        source = [Number(pData[0]) + Number(move[0]), Number(pData[1]) + Number(move[1])];
+        target = pData;
+        totalPath.push(source);
+
         change(source, target);
         pComponent = imgList[twoD2OneD(source)];
     }
+    // console.log(totalPath);
 }
 function resizeImg() {
     if (!imgList) return undefined;
@@ -404,7 +409,7 @@ function initGameArea(index, n, needImg = true) {
 
     if (needImg) {
         let img = document.createElement('img');
-        img.src = rootDataFile + currentFile;
+        img.src = (uploadName ? currentFile : rootDataFile + currentFile );
         img.setAttribute('data-id', `${index}`);
         component.appendChild(img);
 
@@ -416,6 +421,8 @@ function initGameArea(index, n, needImg = true) {
                 animaSource = data;
                 animaTarget = resultIndex;
                 animater = e.target.parentElement.parentElement;
+
+                totalPath.push(data);
                 animation();
             }
         });
@@ -432,7 +439,14 @@ function initGameArea(index, n, needImg = true) {
     frame.classList.add('frame');
     frame.style.width = `${1 / n * 100}%`;
 }
-
+function displayImgPath() {
+    let inputPic = document.querySelectorAll('input[name="currentMainPic"]');
+    inputPic.forEach(x => {
+        x.setAttribute('placeholder', (uploadName ? uploadName : currentFile))
+    });
+    let disImg = document.querySelector('#modalImg');
+    disImg.src = (uploadName ? currentFile : rootDataFile + currentFile );
+}
 
 function initGame() {
     totalAnimationTime = 250;
@@ -440,7 +454,7 @@ function initGame() {
     let item = document.createElement('div');
     let img = document.createElement('img');
     gameArea.querySelector('.item-group').innerHTML = '';
-    img.src = rootDataFile + currentFile;
+    img.src = (uploadName ? currentFile : rootDataFile + currentFile );
 
     item.classList.add('item');
     img.classList.add('component');
@@ -452,10 +466,16 @@ function initGame() {
 
     autoBtn.disabled = true;
     autoBtn.classList.add('btn-secondary');
-    autoBtn.classList.remove('btn-primary' ,'aliveBtn' ,'ml-2');
+    autoBtn.classList.remove('btn-primary', 'aliveBtn', 'ml-2');
     startBtn.disabled = false;
     startBtn.classList.remove('btn-secondary');
-    startBtn.classList.add('btn-primary' ,'aliveBtn');
+    startBtn.classList.add('btn-primary', 'aliveBtn');
+
+    animaSourceList = [];
+    animaTargetList = [];
+    animaterList = [];
+    signList = [];
+    totalPath = [];
 }
 function startGame() {
     gameArea.querySelector('.item-group').innerHTML = '';
@@ -465,19 +485,19 @@ function startGame() {
     imgList = document.querySelectorAll('.game-area .component');
 
     finishedList = [];
-    for (let i = 0; i < partsNum ; i++) {
-        for (let j = 0; j < partsNum ; j++) {
-            finishedList.push([i ,j]);
+    for (let i = 0; i < partsNum; i++) {
+        for (let j = 0; j < partsNum; j++) {
+            finishedList.push([i, j]);
         }
     }
     console.log(finishedList);
     console.log(imgList);
 
     resizeImg();
-    if(partsNum == 3)
+    if (true)//partsNum <= 3
     {
         autoBtn.disabled = false;
-        autoBtn.classList.add('btn-primary' ,'aliveBtn');
+        autoBtn.classList.add('btn-primary', 'aliveBtn');
         autoBtn.classList.remove('btn-secondary');
     }
 }
@@ -485,14 +505,45 @@ function initGameSetting() {
     /* -----------------autoBtn-------------------- */
     autoBtn.addEventListener('click', (e) => {
         autoBtn.disabled = true;
-        autoBtn.classList.add('btn-secondary' ,'ml-2');
-        autoBtn.classList.remove('btn-primary' ,'aliveBtn');
+        autoBtn.classList.add('btn-secondary', 'ml-2');
+        autoBtn.classList.remove('btn-primary', 'aliveBtn');
 
         startBtn.disabled = true;
         startBtn.classList.add('btn-secondary');
-        startBtn.classList.remove('btn-primary' ,'aliveBtn');
+        startBtn.classList.remove('btn-primary', 'aliveBtn');
+        if (partsNum <= 3)
+            autoCompletion();
+        else {
+            totalAnimationTime = 10;
+            intervalTime = 5;
+            resizeImg();
+            totalPath = totalPath.reverse();
+            let prepre = null;
+            let pre = null;
+            for (let x of totalPath) {
+                if (pre != null && (pre[0] != x[0] || pre[1] != x[1])) {
+                    animaSourceList.push(x);
+                    animaTargetList.push(pre);
+                    try {
+                        animaterList.push(Array.from(imgList).find(y => {
+                            let result = y.getAttribute('data-index').split(' ').map(x => Number(x));
+                            result = Math.abs(result[0] - x[0]) + Math.abs(result[1] - x[1]);
+                            return result == 0;
+                        }).parentElement);
+                        signList.push([pre[1] - x[1], pre[0] - x[0]]);
+                    }
+                    catch (e) {
+                        console.log(x);
+                        // debugger
+                    }
 
-        autoCompletion();
+                }
+                prepre = pre;
+                pre = x;
+            }
+            console.log(totalPath);
+            animation();
+        }
     });
 
     /* -----------------start-------------------- */
@@ -535,13 +586,37 @@ function initGameSetting() {
                 item.classList.remove('active');
             });
             e.target.classList.add('active');
+            uploadName = undefined;
             currentFile = `${e.target.getAttribute('data-fileName')}.jpg`;
+            displayImgPath();
             initGame();
         });
         dropDown.appendChild(btn);
     }
     dropDown.querySelectorAll('button')[0].classList.add('active');
     currentFile = `source_0${1}.jpg`;
+    displayImgPath();
+
+    /* -----------------uploadBtn------- */
+    let upload = document.querySelector('#uploadBtn');
+    upload.addEventListener('click', () => {
+        $('#modal-file').modal('show');
+    });
+
+    /* -----------------uploadFromlocBtn------- */
+    const fileUploader = document.querySelector('#fileForm');
+    console.log(fileUploader);
+    fileUploader.addEventListener('change', (e) => {
+        console.log(e.target.files[0]); // get file object
+        uploadName = e.target.files[0].name;
+        currentFile = window.URL.createObjectURL(e.target.files[0]);
+        displayImgPath();
+
+    });
+    document.querySelector('#modalConfirm').addEventListener('click',()=>{
+        $('#modal-file').modal('hide');
+        initGame();
+    });
 }
 window.onload = function () {
     window.onresize = resizeImg;

@@ -214,6 +214,31 @@ img {
   overflow: hidden;
 }
 
+.modal img {
+  border: 1px solid #ccc;
+}
+
+.modal .item {
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  position: relative;
+}
+
+.modal .item .component {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+
+#fileForm {
+  display: none;
+}
+
 @media screen and (min-width: 768px) {
   .game-area .box {
     width: 80%;
@@ -224,9 +249,12 @@ img {
 
 @media screen and (min-width: 992px) {
   .game-area .box {
-    width: 60%;
+    width: 100%;
     height: 0;
-    padding-top: 60%;
+    padding-top: 100%;
+  }
+  .wrap {
+    margin-top: 0px;
   }
 }
 /*# sourceMappingURL=puzzle.css.map */
