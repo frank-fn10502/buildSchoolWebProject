@@ -239,6 +239,32 @@ img {
   display: none;
 }
 
+.input-group {
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+}
+
+.input-group-prepend, .input-area {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.disabedArea {
+  position: relative;
+}
+
+.disabedArea::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: #aaa;
+  z-index: 100;
+}
+
 @media screen and (min-width: 768px) {
   .game-area .box {
     width: 80%;

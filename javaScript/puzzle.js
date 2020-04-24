@@ -1,6 +1,7 @@
 let gameArea = document.querySelector('.game-area');
 let startBtn = document.querySelector('#start');
 let autoBtn = document.querySelector('#autoCompletion');
+let modalSoureAreas = document.querySelectorAll('.source.input-group .input-area ');
 let imgList = [];
 let partsNum = 3;
 let offsetImg = 10;
@@ -605,7 +606,6 @@ function initGameSetting() {
 
     /* -----------------uploadFromlocBtn------- */
     const fileUploader = document.querySelector('#fileForm');
-    console.log(fileUploader);
     fileUploader.addEventListener('change', (e) => {
         console.log(e.target.files[0]); // get file object
         uploadName = e.target.files[0].name;
@@ -617,6 +617,32 @@ function initGameSetting() {
         $('#modal-file').modal('hide');
         initGame();
     });
+
+    /* -----------------webImgUrlBtn------- */
+    const webImgUrlBtn = document.querySelector('#webImgUrlBtn');
+    webImgUrlBtn.addEventListener('click', (e) => {
+        let url = document.querySelector('#webImgUrl').value;
+        if(url)
+        {
+            uploadName = 'fromWeb';
+            currentFile = url;
+            displayImgPath();
+        }
+
+    });
+
+    /* -----------------radioBtn select source------- */
+    //modalSoureAreas
+    let radioBtns = document.querySelectorAll('input[name="selectSource"]');
+    radioBtns.forEach((x,y) => {
+        x.addEventListener('change' ,()=>{
+            modalSoureAreas[y].classList.remove('disabedArea');
+            modalSoureAreas[1-y].classList.add('disabedArea');
+        });
+    });
+    radioBtns[0].checked = true;
+    modalSoureAreas[0].classList.remove('disabedArea');
+    modalSoureAreas[1].classList.add('disabedArea');
 }
 window.onload = function () {
     window.onresize = resizeImg;

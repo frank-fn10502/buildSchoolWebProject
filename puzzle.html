@@ -81,24 +81,41 @@
     <div class="modal fade" id="modal-file" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal">選擇檔案來源</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
                             <label for="imgSource" class="mb-2">來源</label>
-                            <div class="input-group">
-                                <input name="currentMainPic" type="text" class="form-control"
-                                    placeholder="./imgs/puzzle/source_01.jpg" aria-label=""
-                                    aria-describedby="basic-addon1" readonly>
-                                <div class="input-group-append">
-                                    <input type="file" name="" id="fileForm" accept=".png, .jpg, .jpeg">
-                                    <label id="uploadFromlocBtn" class="btn btn-outline-secondary" type="button"
-                                        for="fileForm">上傳</label>
+                            <div class="source input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="radio" name="selectSource">
+                                    </div>
+                                </div>
+                                <div class="input-group input-area">
+                                    <input name="currentMainPic" type="text" class="form-control"
+                                        placeholder="./imgs/puzzle/source_01.jpg" aria-label=""
+                                        aria-describedby="basic-addon1" readonly>
+                                    <div class="input-group-append">
+                                        <input type="file" name="" id="fileForm" accept=".png, .jpg, .jpeg">
+                                        <label id="uploadFromlocBtn" class="btn btn-outline-secondary" type="button"
+                                            for="fileForm">上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="source input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="radio" name="selectSource">
+                                    </div>
+                                </div>
+                                <div class="input-area input-group">
+                                    <input type="text" class="form-control" placeholder="https://xxxxxxxxx"
+                                        aria-label="" aria-describedby="basic-addon1"
+                                        id="webImgUrl" >
+                                    <div class="input-group-append">
+                                        <button id="webImgUrlBtn" class="btn btn-outline-secondary"
+                                            type="button">檢視</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="wrap mt-3">

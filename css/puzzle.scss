@@ -120,6 +120,7 @@ img{
             }
         }
     }
+
 }
 
 .modal
@@ -145,6 +146,26 @@ img{
 }
 #fileForm{
     display: none;
+}
+.input-group{
+    flex-wrap: nowrap;
+}
+.input-group-prepend ,.input-area{
+    display: inline-flex;
+}
+.disabedArea
+{
+    position: relative;
+}
+.disabedArea::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: #aaa;
+    z-index: 100;
 }
 
 @media screen and (min-width: 768px){
