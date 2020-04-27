@@ -114,7 +114,7 @@ h1{
         }
     }
 }
-.modal-dialog{
+#setEventPanel.modal-dialog{
     .modal-header {
         #eventTitle{
             border: none;
@@ -151,6 +151,56 @@ h1{
         }
         div{
             margin: 10px 0;
+        }
+    }
+}
+#eventControlPanel{
+    .modal-header{
+        .title{
+            h3{
+                font-size: 30px;
+            }
+        }
+    }
+    .modal-body{
+        .list-group{
+            max-height: 500px;
+            overflow-y: auto;
+            li{
+                cursor: pointer;
+            }
+        }
+        .content{
+            h3{
+                display: inline-block;
+                padding: 5px 10px;
+                background-color: rgb(117, 117, 226);
+                border-radius: 5px;
+                width: 100%;
+                font-size: 22px;
+            }
+            .time-group{
+                margin-left: 10px;
+                margin-bottom: 10px;
+                font-size: 14px;
+                color: #aaa;
+                span{
+                    display: inline-block;
+                }
+            }
+            .content{
+                p{
+                    padding: 5px 20px;
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+    .modal-footer{
+        .button-group{
+            button+button{
+                margin-left: 10px;
+            }
         }
     }
 }

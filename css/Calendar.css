@@ -194,22 +194,22 @@ h1 {
   border: 2px solid #00f;
 }
 
-.modal-dialog .modal-header #eventTitle {
+#setEventPanel.modal-dialog .modal-header #eventTitle {
   border: none;
 }
 
-.modal-dialog .modal-header #eventTitle:focus {
+#setEventPanel.modal-dialog .modal-header #eventTitle:focus {
   outline: none;
 }
 
-.modal-dialog .modal-header .title {
+#setEventPanel.modal-dialog .modal-header .title {
   position: relative;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
 
-.modal-dialog .modal-header .title::after {
+#setEventPanel.modal-dialog .modal-header .title::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -222,19 +222,61 @@ h1 {
   transition: .5s;
 }
 
-.modal-dialog .modal-header .title:hover::after {
+#setEventPanel.modal-dialog .modal-header .title:hover::after {
   content: '';
   left: 0;
   right: 0;
   opacity: 1;
 }
 
-.modal-dialog .modal-body input {
+#setEventPanel.modal-dialog .modal-body input {
   margin: 0 10px;
 }
 
-.modal-dialog .modal-body div {
+#setEventPanel.modal-dialog .modal-body div {
   margin: 10px 0;
+}
+
+#eventControlPanel .modal-header .title h3 {
+  font-size: 30px;
+}
+
+#eventControlPanel .modal-body .list-group {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+#eventControlPanel .modal-body .list-group li {
+  cursor: pointer;
+}
+
+#eventControlPanel .modal-body .content h3 {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #7575e2;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 22px;
+}
+
+#eventControlPanel .modal-body .content .time-group {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+#eventControlPanel .modal-body .content .time-group span {
+  display: inline-block;
+}
+
+#eventControlPanel .modal-body .content .content p {
+  padding: 5px 20px;
+  word-break: break-all;
+}
+
+#eventControlPanel .modal-footer .button-group button + button {
+  margin-left: 10px;
 }
 
 .notfitData {

@@ -25,21 +25,76 @@ Date.prototype.yyyymmdd = function () {
     (dd > 9 ? '' : '0') + dd
     ].join('-');
 };
+Date.prototype.inInterval = function (start, end) {
+    if (typeof start == 'string')
+        start = new Date(start);
+    if (typeof end == 'string')
+        end = new Date(end);
+    return this >= start && this <= end;
+};
 
+let editIndex = -1;
 let calendarList = null;
 let currentDate = null;
+let clickDate = null;
 let pDate = null;
 let calenderBody = document.querySelector('.calender-body tbody');
 
 
+function initEventControlPanel() {
+    let title = document.querySelector('#eventControlPanel #editDateTitle');
+    let item_group = document.querySelector('#eventControlPanel .list-group');
+    title.innerHTML = `${clickDate.getFullYear()}年${clickDate.getMonth()}月${clickDate.getDate()}日`;
+
+    item_group.innerHTML = '';
+    calendarList.forEach((data, index) => {
+        if (clickDate.inInterval(data.startDate, data.endDate)) {
+            let clone = document.querySelector('#edit-item').content.cloneNode(true);
+            clone.querySelector('.event-title').innerHTML = data.title;
+            clone.querySelector('.start-time').innerHTML = data.startDate;
+            clone.querySelector('.end-time').innerHTML = data.endDate;
+            let content = clone.querySelector('.content .content');
+            let p = document.createElement('p');
+            p.innerHTML = data.desc;
+
+            content.innerHTML = '';
+            content.appendChild(p);
+            clone.querySelector("li").setAttribute('data-index', index);
+            item_group.appendChild(clone);
+        }
+    });
+    item_group.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click' ,(e) => {
+            editIndex = e.currentTarget.getAttribute('data-index');
+            let data = calendarList[editIndex];
+            let eventTitle = document.querySelector('#eventTitle');
+            let startTime = document.querySelector('#startDate');
+            let endTime = document.querySelector('#endDate');
+            let desc = document.querySelector('#desc');
+    
+            startTime.value = data.startDate;
+            endTime.value = data.endDate;
+    
+            eventTitle.value = data.title;
+            desc.value = data.desc;
+    
+            this.document.querySelector('.warring.notfitData').style.display = 'none';
+            document.querySelector('#delteBtn').style.display = 'block';
+            
+            $('#setEventPanel').modal('show');
+            $('#eventControlPanel').modal('hide');
+        });
+    })
+}
 function createRecordEntity() {
     let targets = calenderBody.querySelectorAll('td');
     targets.forEach((target) => {
-        calendarList.forEach(data => {
+        let item = target.children[0].children[0].children[1];
+        item.innerHTML = '';
+        calendarList.forEach((data, index) => {
             let source = new Date(data.startDate);
-            let targetDate = new Date(target.getAttribute('data-date'))
+            let targetDate = new Date(target.getAttribute('data-date'));
             if (source.sameDay(targetDate)) {
-                let item = target.children[0].children[0].children[1];
                 let span = document.createElement('span');
                 let title = data.title.substring(0, Math.min(data.title.length, 10));
                 if (data.title.length > 10)
@@ -63,11 +118,17 @@ function confirm() {
         title: tile,
         desc: desc
     }
-    calendarList.push(data);
+    if(editIndex < 0)
+        calendarList.push(data);
+    else
+    {
+        calendarList[editIndex] = data;
+        editIndex = -1;
+    }
     localStorage.setItem('calendar-record', JSON.stringify(calendarList));
 
     console.log(calendarList);
-    createRecordEntity(data);
+    createRecordEntity();
 }
 function createDayEntity(offsetWeekday, currentDay, lastDayMonth) {
     let tr = document.createElement('tr');
@@ -85,7 +146,7 @@ function createDayEntity(offsetWeekday, currentDay, lastDayMonth) {
         if (tempDate.getDay() == 0 || tempDate.getDay() == 6) {
             span.classList.add('holiday');
         }
-        if (currentDay.sameDay(currentDate)) {
+        if (tempDate.sameDay(currentDate)) {
             td.classList.add('currentDate');
         }
         td.setAttribute('data-date', tempDate.yyyymmdd());
@@ -93,23 +154,6 @@ function createDayEntity(offsetWeekday, currentDay, lastDayMonth) {
         item.appendChild(desc_group);
         td.appendChild(cell)
         tr.appendChild(td);
-
-        td.addEventListener('click', (e) => {
-            let eventTitle = document.querySelector('#eventTitle');
-            let startTime = document.querySelector('#startDate');
-            let endTime = document.querySelector('#endDate');
-            let desc = document.querySelector('#desc');
-
-            startTime.value = e.currentTarget.getAttribute('data-date');
-            endTime.value = e.currentTarget.getAttribute('data-date');
-
-            eventTitle.value = '';
-            desc.value = '';
-
-            this.document.querySelector('.warring.notfitData').style.display = 'none';
-            console.log();
-            $('#setEventPanel').modal('show');
-        });
 
         if (i >= offsetWeekday)
             currentDay.addDays();
@@ -138,6 +182,15 @@ function initCalendar(date) {
     }
 
     createRecordEntity();
+    /*-----------------------------td------------------------------------*/
+    calenderBody.querySelectorAll('td').forEach(td => {
+        td.addEventListener('click', (e) => {
+
+            clickDate = new Date(e.currentTarget.getAttribute('data-date'));
+            initEventControlPanel();
+            $('#eventControlPanel').modal('show');
+        });
+    });
 }
 function initControler(currentDate) {
     let monthSliderLeft = document.querySelector('span.control:first-child');
@@ -156,7 +209,7 @@ function initControler(currentDate) {
     let startTime = document.querySelector('#startDate');
     let endTime = document.querySelector('#endDate');
     let desc = document.querySelector('#desc');
-    let storeData = document.querySelector('button#confirm');
+    let storeData = document.querySelector('#setEventPanel button#confirm');
     storeData.addEventListener('click', () => {
         if (!eventTitle.value || !desc.value) {
             document.querySelector('.warring').style.display = 'block';
@@ -174,24 +227,68 @@ function initControler(currentDate) {
                 }, 2000);
             }
             else {
-                
                 confirm();
                 $('#setEventPanel').modal('hide');
+
+                initEventControlPanel();
+                $('#eventControlPanel').modal('show');
             }
         }
     });
+
+    /*-----------------------------addNewEvent------------------------------------*/
+    document.querySelector('#addNewEvent').addEventListener('click', (e) => {
+        editIndex = -1;
+        let eventTitle = document.querySelector('#eventTitle');
+        let startTime = document.querySelector('#startDate');
+        let endTime = document.querySelector('#endDate');
+        let desc = document.querySelector('#desc');
+
+        startTime.value = clickDate.yyyymmdd();
+        endTime.value = clickDate.yyyymmdd();
+
+        eventTitle.value = '';
+        desc.value = '';
+
+        document.querySelector('#delteBtn').style.display = 'none';
+        this.document.querySelector('.warring.notfitData').style.display = 'none';
+        console.log();
+
+        $('#setEventPanel').modal('show');
+        $('#eventControlPanel').modal('hide');
+    });
+
+    /*-----------------------------eventControlPanel confirm------------------------------------*/
+    let events_confirm = document.querySelector('#events-confirm');
+    events_confirm.addEventListener('click', () => {
+        $('#eventControlPanel').modal('hide');
+    });
+
+    /*-----------------------------dleteEvent------------------------------------*/
+    let delteBtn = document.querySelector('#delteBtn');
+    delteBtn.addEventListener('click', () => {
+        calendarList.splice(editIndex ,1);
+        editIndex = -1;
+
+        localStorage.setItem('calendar-record', JSON.stringify(calendarList));
+
+        console.log(calendarList);
+        createRecordEntity();
+        initEventControlPanel();
+
+        $('#setEventPanel').modal('hide');
+        $('#eventControlPanel').modal('show');
+    });
+
+    document.querySelector('#delteBtn').style.display = 'none';
 }
 
 window.onload = function () {
     calendarList = JSON.parse(localStorage.getItem('calendar-record')) || []; //??
-
 
     currentDate = new Date();
     pDate = new Date(currentDate.valueOf());
 
     initCalendar(currentDate);
     initControler(currentDate);
-
-
-    // console.log(calendarList);
 }

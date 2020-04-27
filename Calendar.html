@@ -56,6 +56,57 @@
         </div>
     </div>
 
+    <div class="modal fade" id="eventControlPanel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="title">
+                        <h3 class="" id="editDateTitle">
+                            2020 年 4 月
+                        </h3>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <li class="list-group-item list-group-item-action">
+                            <div class="content">
+                                <h3 class="event-title">
+                                    frank-test
+                                </h3>
+                                <div class="time-group">
+                                    <span class="start-time">
+                                        2020年4月5日 22:10
+                                    </span>
+                                    ~
+                                    <span class="end-time">
+                                        2020年4月5日 23:55
+                                    </span>
+                                </div>
+                                <div class="content">
+                                    <p>
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam dolore aliquid
+                                        ipsam harum corporis voluptate porro ratione quo asperiores unde. Tempora,
+                                        numquam tempore harum at officia modi rem hic dolores?
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="button-group d-flex justify-content-end">
+                        <button class="btn btn-success" id="addNewEvent">新增</button>
+                        <button type="button" class="btn btn-primary" id="events-confirm">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="setEventPanel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -85,6 +136,7 @@
                 <div class="modal-footer">
                     <div class="warring notfitData">等等~不可以喔</div>
                     <button type="button" class="btn btn-primary" id="confirm">確定</button>
+                    <button type="button" class="btn btn-danger" id="delteBtn">刪除</button>
                 </div>
             </div>
         </div>
@@ -98,6 +150,31 @@
         </div>
     </template>
 
+    <template id="edit-item">
+        <li class="list-group-item list-group-item-action">
+            <div class="content">
+                <h3 class="event-title">
+                    frank-test
+                </h3>
+                <div class="time-group">
+                    <span class="start-time">
+                        2020年4月5日 22:10
+                    </span>
+                    ~
+                    <span class="end-time">
+                        2020年4月5日 23:55
+                    </span>
+                </div>
+                <div class="content">
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam dolore aliquid
+                        ipsam harum corporis voluptate porro ratione quo asperiores unde. Tempora,
+                        numquam tempore harum at officia modi rem hic dolores?
+                    </p>
+                </div>
+            </div>
+        </li>
+    </template>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
