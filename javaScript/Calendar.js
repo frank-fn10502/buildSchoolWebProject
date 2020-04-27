@@ -92,9 +92,9 @@ function createRecordEntity() {
         let item = target.children[0].children[0].children[1];
         item.innerHTML = '';
         calendarList.forEach((data, index) => {
-            let source = new Date(data.startDate);
+            // let source = new Date(data.startDate);
             let targetDate = new Date(target.getAttribute('data-date'));
-            if (source.sameDay(targetDate)) {
+            if (targetDate.inInterval(data.startDate ,data.endDate)) {
                 let span = document.createElement('span');
                 let title = data.title.substring(0, Math.min(data.title.length, 10));
                 if (data.title.length > 10)
