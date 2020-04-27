@@ -44,7 +44,7 @@ let calenderBody = document.querySelector('.calender-body tbody');
 function initEventControlPanel() {
     let title = document.querySelector('#eventControlPanel #editDateTitle');
     let item_group = document.querySelector('#eventControlPanel .list-group');
-    title.innerHTML = `${clickDate.getFullYear()}年${clickDate.getMonth()}月${clickDate.getDate()}日`;
+    title.innerHTML = `${clickDate.getFullYear()}年${clickDate.getMonth()+1}月${clickDate.getDate()}日`;
 
     item_group.innerHTML = '';
     calendarList.forEach((data, index) => {
