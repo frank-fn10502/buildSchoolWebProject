@@ -337,11 +337,17 @@ input{
 .collections .item{
     padding: 0;
     border: 1px solid #f3f3f3;
+    display: flex;
+    flex-direction: column;
 }
 .collections .item .txt{
     padding: 0;
     padding: 20px 20px 65px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    flex-grow: 1;
 }
 .collections .item .txt h3{
     font-size: 24px;
@@ -357,6 +363,8 @@ input{
     color: #181a1f;
     border: 3px solid #181a1f;
     display: inline-block;
+    margin-top: auto;
+    align-self: center;
 }
 
 .onseles.collections{
