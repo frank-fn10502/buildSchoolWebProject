@@ -394,22 +394,27 @@ function resizeImg() {
     });
     if (document.querySelector('.check-input').checked)//
     {
-        let min = 80;
+        let min = 80 ,isChange = false;
         hintList.forEach(x => {
             let w = x.offsetWidth;
             let span = x.querySelector('span');
-            let d = w / span.offsetWidth;
-            console.log(w, span.offsetWidth, d);
-
-            if (d > 4 || d < 1) {
+            let d = parseFloat(w / span.offsetWidth) ;
+            
+            if (d > 4 || d <= 0.6) {
+                console.log(w, span.offsetWidth, d ,d * 80);
                 min = min > (d) * 80 ? (d) * 80 : min;
+                isChange = true;
             }
         });
-        hintList.forEach(x => {
-            let span = x.querySelector('span');
-            span.style.fontSize = `${min}px`;
-            console.log(span.style.fontSize);
-        });
+        if(isChange)
+        {
+            hintList.forEach(x => {
+                let span = x.querySelector('span');
+                span.style.fontSize = `${min}px`;
+                console.log(span.style.fontSize);
+            });
+        }
+
     }
 }
 function initGameArea(index, n, needImg = true) {
