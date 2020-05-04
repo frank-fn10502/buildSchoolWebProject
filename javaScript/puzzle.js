@@ -2,6 +2,7 @@ let gameArea = document.querySelector('.game-area');
 let startBtn = document.querySelector('#start');
 let autoBtn = document.querySelector('#autoCompletion');
 let modalSoureAreas = document.querySelectorAll('.source.input-group .input-area');
+let hintList = [];
 let imgList = [];
 let partsNum = 3;
 let offsetImg = 10;
@@ -244,7 +245,7 @@ function animation() {
             setTimeout(() => {
                 if (isStart)
                     alert('you win');
-            }, 50);
+            }, 500);
 
 
             startBtn.disabled = false;
@@ -317,10 +318,14 @@ function change(i1, i2) {
     try {
         let img = imgList[twoD2OneD(i1)].querySelector('img');
         imgList[twoD2OneD(i2)].appendChild(img);
+
+        let hint1 = imgList[twoD2OneD(i1)].querySelector('.hint');
+        let hint2 = imgList[twoD2OneD(i2)].querySelector('.hint');
+        imgList[twoD2OneD(i1)].appendChild(hint2);
+        imgList[twoD2OneD(i2)].appendChild(hint1);
     }
     catch (e) {
         console.log(imgList[twoD2OneD(i1)].querySelector('img'), imgList[twoD2OneD(i2)]);
-        // debugger;
     }
 }
 function displayRandom() {
@@ -379,20 +384,33 @@ function resizeImg() {
         item = item.querySelector('img');
         if (item) {
             let index = item.getAttribute('data-id');
-            // index = twoD2OneD(index);
-            // console.log(item ,index);
             let row = Math.floor(index / partsNum);
             let col = index % partsNum;
 
-            // console.log(item);
             item.style.height = `${h * partsNum}px`;
             item.style.width = `${w * partsNum}px`;
-
-            // item.style.objectPosition = `${partW * col}px ${partH * row}px`;
             item.style.transform = `translate(${partW * col}px,${partH * row}px)`;
-            // console.log(`${partW * col} ${partH * row}`);
         }
     });
+    if (document.querySelector('.check-input').checked)//
+    {
+        let min = 80;
+        hintList.forEach(x => {
+            let w = x.offsetWidth;
+            let span = x.querySelector('span');
+            let d = w / span.offsetWidth;
+            console.log(w, span.offsetWidth, d);
+
+            if (d > 4 || d < 1) {
+                min = min > (d) * 80 ? (d) * 80 : min;
+            }
+        });
+        hintList.forEach(x => {
+            let span = x.querySelector('span');
+            span.style.fontSize = `${min}px`;
+            console.log(span.style.fontSize);
+        });
+    }
 }
 function initGameArea(index, n, needImg = true) {
     let item_group = gameArea.querySelector('.item-group');
@@ -400,12 +418,33 @@ function initGameArea(index, n, needImg = true) {
     let frame = document.createElement('div');
     let item = document.createElement('div');
     let component = document.createElement('div');
+    let hint = document.createElement('div');
     let row = Math.floor(index / partsNum);
     let col = index % partsNum;
 
+    hint.innerHTML = `<span>${index}</span>`;
+    
+    hint.addEventListener('click', (e) => {
+        let item = e.currentTarget.parentElement;
+        let img = document.querySelector('img');
+        if (img) {
+            let data = item.getAttribute('data-index').split(' ');
+            let resultIndex = findMovePos(data);
+
+            if (resultIndex) {
+                animaSource = data;
+                animaTarget = resultIndex;
+                animater = e.target.parentElement;
+
+                totalPath.push(data);
+                animation();
+            }
+        }
+    });
     if (needImg) {
         let img = document.createElement('img');
-        img.src = (uploadName ? currentFile : rootDataFile + currentFile );
+
+        img.src = (uploadName ? currentFile : rootDataFile + currentFile);
         img.setAttribute('data-id', `${index}`);
         component.appendChild(img);
 
@@ -416,14 +455,20 @@ function initGameArea(index, n, needImg = true) {
             if (resultIndex) {
                 animaSource = data;
                 animaTarget = resultIndex;
-                animater = e.target.parentElement.parentElement;
+                animater = e.target.parentElement;
 
                 totalPath.push(data);
                 animation();
             }
         });
-
+        hint.classList.add('hint');
     }
+    else{
+        hint.classList.add('hint' ,'blank');
+    }
+
+
+    component.appendChild(hint);
     component.setAttribute('data-index', `${row} ${col}`);
 
     item.appendChild(component);
@@ -441,16 +486,18 @@ function displayImgPath() {
         x.setAttribute('placeholder', (uploadName ? uploadName : currentFile))
     });
     let disImg = document.querySelector('#modalImg');
-    disImg.src = (uploadName ? currentFile : rootDataFile + currentFile );
+    disImg.src = (uploadName ? currentFile : rootDataFile + currentFile);
 }
 
 function initGame() {
     totalAnimationTime = 250;
     intervalTime = 20;
+    let originImg = document.querySelector('.origin');
     let item = document.createElement('div');
     let img = document.createElement('img');
     gameArea.querySelector('.item-group').innerHTML = '';
-    img.src = (uploadName ? currentFile : rootDataFile + currentFile );
+    img.src = (uploadName ? currentFile : rootDataFile + currentFile);
+    originImg.src = img.src;
 
     item.classList.add('item');
     img.classList.add('component');
@@ -479,6 +526,14 @@ function startGame() {
         initGameArea(i, partsNum, i != partsNum * partsNum - 1);
     }
     imgList = document.querySelectorAll('.game-area .component');
+
+    hintList = document.querySelectorAll('.hint');
+    let hintCheckbox = document.querySelector('.check-input');
+    let status = hintCheckbox.checked ? 'flex' : 'none';
+    hintList.forEach(x => {
+        x.style.display = status;
+    });
+
 
     finishedList = [];
     for (let i = 0; i < partsNum; i++) {
@@ -607,9 +662,8 @@ function initGameSetting() {
         currentFile = window.URL.createObjectURL(e.target.files[0]);
         console.log(currentFile);
         displayImgPath();
-
     });
-    document.querySelector('#modalConfirm').addEventListener('click',()=>{
+    document.querySelector('#modalConfirm').addEventListener('click', () => {
         $('#modal-file').modal('hide');
         initGame();
     });
@@ -618,8 +672,7 @@ function initGameSetting() {
     const webImgUrlBtn = document.querySelector('#webImgUrlBtn');
     webImgUrlBtn.addEventListener('click', (e) => {
         let url = document.querySelector('#webImgUrl').value;
-        if(url)
-        {
+        if (url) {
             uploadName = 'fromWeb';
             currentFile = url;
             displayImgPath();
@@ -627,17 +680,33 @@ function initGameSetting() {
     });
 
     /* -----------------radioBtn select source------- */
-    //modalSoureAreas
     let radioBtns = document.querySelectorAll('input[name="selectSource"]');
-    radioBtns.forEach((x,y) => {
-        x.addEventListener('change' ,()=>{
+    radioBtns.forEach((x, y) => {
+        x.addEventListener('change', () => {
             modalSoureAreas[y].classList.remove('disabedArea');
-            modalSoureAreas[1-y].classList.add('disabedArea');
+            modalSoureAreas[1 - y].classList.add('disabedArea');
         });
     });
     radioBtns[0].checked = true;
     modalSoureAreas[0].classList.remove('disabedArea');
     modalSoureAreas[1].classList.add('disabedArea');
+
+    /* -----------------hint check box------- */
+    let hintCheckbox = document.querySelector('.check-input');
+    hintCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            hintList.forEach(x => {
+                x.style.display = 'flex';
+            });
+            resizeImg();
+        }
+        else {
+            hintList.forEach(x => {
+                x.style.display = 'none';
+            });
+        }
+    });
+    hintCheckbox.checked = false;
 }
 window.onload = function () {
     window.onresize = resizeImg;
