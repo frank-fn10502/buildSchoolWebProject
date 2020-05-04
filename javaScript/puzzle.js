@@ -610,6 +610,7 @@ function initGameSetting() {
         console.log(e.target.files[0]); // get file object
         uploadName = e.target.files[0].name;
         currentFile = window.URL.createObjectURL(e.target.files[0]);
+        console.log(currentFile);
         displayImgPath();
 
     });
