@@ -399,9 +399,9 @@ function resizeImg() {
             let w = x.offsetWidth;
             let span = x.querySelector('span');
             let d = parseFloat(w / span.offsetWidth) ;
-            
-            if (d > 4 || d <= 0.6) {
-                console.log(w, span.offsetWidth, d ,d * 80);
+            // console.log(w, span.offsetWidth, d ,d * 80);
+            if (d > 4 || d <= 0.8) {
+                
                 min = min > (d) * 80 ? (d) * 80 : min;
                 isChange = true;
             }
