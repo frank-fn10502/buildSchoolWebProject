@@ -1,7 +1,7 @@
 let gameArea = document.querySelector('.game-area');
 let startBtn = document.querySelector('#start');
 let autoBtn = document.querySelector('#autoCompletion');
-let modalSoureAreas = document.querySelectorAll('.source.input-group .input-area ');
+let modalSoureAreas = document.querySelectorAll('.source.input-group .input-area');
 let imgList = [];
 let partsNum = 3;
 let offsetImg = 10;
@@ -30,11 +30,6 @@ let closeList = []; //二元搜尋樹(not yet)
 let finishedList = [[0, 0], [0, 1], [0, 2],
 [1, 0], [1, 1], [1, 2],
 [2, 0], [2, 1], [2, 2]];
-// let node = {
-//     parent : '',
-//     child: [],
-//     key:'012345678'//一串編碼(二元搜尋數) ,8: blank
-// }
 let animaSourceList = [];
 let animaTargetList = [];
 let animaterList = [];
