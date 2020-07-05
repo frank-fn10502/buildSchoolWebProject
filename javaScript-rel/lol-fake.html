@@ -276,19 +276,20 @@
                 }
             }
         ];
+        // const promise = new Promise(function (resolve, reject) {
+        //     $.ajax({
+        //         type: "get",
+        //         url: "http://127.0.0.1:5502/javaScript-rel/data/lol.json",
+        //         dataType: "json",
+        //         success: function (response) {
+        //             resolve(response);
+        //         }
+        //     });
+        // });
         //以上紀念用...
         var dataList = [];
         var container = document.querySelector('.row');
-        const promise = new Promise(function (resolve, reject) {
-            $.ajax({
-                type: "get",
-                url: "http://127.0.0.1:5502/javaScript-rel/data/lol.json",
-                dataType: "json",
-                success: function (response) {
-                    resolve(response);
-                }
-            });
-        });
+
 
         function createComponent(championData) {
             let template = document.querySelector('#championShortInfo').content.cloneNode(true);
